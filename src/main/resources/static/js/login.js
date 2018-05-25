@@ -165,8 +165,11 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
+				debugger;
 				// var type = 'phone';
+				// 用户名				
 				var inp = $.trim($('#num').val());
+				// 密码
 				var pass = $.md5($.trim($('#pass').val()));
 				if (checkAccount(inp) && checkPass(pass)) {
 					var ldata = {userinp:inp,password:pass};
@@ -178,7 +181,7 @@ $(function(){
 						ldata.code = code;
 					}
 					$.ajax({
-			            url: '/dologin',
+			            url: '/verifyLogin',
 			            type: 'post',
 			            dataType: 'json',
 			            async: true,
@@ -222,6 +225,7 @@ $(function(){
 			});
 		} else {
 			$(".log-btn").click(function(){
+				debugger;
 				// var type = 'phone';
 				var phone = $.trim($('#num2').val());
 				var pcode = $.trim($('#veri-code').val());
