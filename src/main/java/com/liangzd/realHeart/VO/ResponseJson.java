@@ -1,4 +1,4 @@
-package com.liangzd.realHeart.bean;
+package com.liangzd.realHeart.VO;
 
 public class ResponseJson {
 	private Integer code;

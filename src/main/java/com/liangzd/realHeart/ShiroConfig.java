@@ -1,15 +1,22 @@
 package com.liangzd.realHeart;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.apache.shiro.mgt.SecurityManager;
 
-import com.liangzd.realHeart.realm.CustomerShiroRealm;
+import com.liangzd.realHeart.realm.AdminShiroRealm;
+import com.liangzd.realHeart.realm.CustomizedModularRealmAuthenticator;
+import com.liangzd.realHeart.realm.UserShiroRealm;
 
 @Configuration
 public class ShiroConfig {
@@ -41,16 +48,47 @@ public class ShiroConfig {
 	}
 
 	@Bean
-	public CustomerShiroRealm customerShiroRealm(){
-		CustomerShiroRealm customerShiroRealm = new CustomerShiroRealm();
-		return customerShiroRealm;
+	public UserShiroRealm userShiroRealm(){
+		UserShiroRealm userShiroRealm = new UserShiroRealm();
+		return userShiroRealm;
+	}
+	
+	@Bean
+	public HashedCredentialsMatcher hashedCredentialsMatcher() {
+		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+		hashedCredentialsMatcher.setHashAlgorithmName("MD5");
+		hashedCredentialsMatcher.setHashIterations(1024);
+		return hashedCredentialsMatcher;
+	}
+	
+	@Bean
+	public AdminShiroRealm adminShiroRealm(){
+		AdminShiroRealm adminShiroRealm = new AdminShiroRealm();
+		adminShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+		return adminShiroRealm;
 	}
 
+	@Bean
+	public CustomizedModularRealmAuthenticator customizedModularRealmAuthenticator() {
+		CustomizedModularRealmAuthenticator customizedModularRealmAuthenticator = new CustomizedModularRealmAuthenticator();
+		customizedModularRealmAuthenticator.setAuthenticationStrategy(atLeastOneSuccessfulStrategy());
+		return customizedModularRealmAuthenticator;
+	}
 
+	@Bean
+	public AtLeastOneSuccessfulStrategy atLeastOneSuccessfulStrategy() {
+		AtLeastOneSuccessfulStrategy atLeastOneSuccessfulStrategy = new AtLeastOneSuccessfulStrategy();
+		return atLeastOneSuccessfulStrategy;
+	}
+	
 	@Bean
 	public SecurityManager securityManager(){
 		DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
-		securityManager.setRealm(customerShiroRealm());
+		securityManager.setAuthenticator(customizedModularRealmAuthenticator());
+		Collection<Realm> realms = new ArrayList<Realm>();
+		realms.add(userShiroRealm());
+		realms.add(adminShiroRealm());
+		securityManager.setRealms(realms);
 		return securityManager;
 	}
 }

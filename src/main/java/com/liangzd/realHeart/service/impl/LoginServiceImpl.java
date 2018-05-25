@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.druid.util.StringUtils;
+import com.liangzd.realHeart.dao.AdminUserDao;
 import com.liangzd.realHeart.dao.UserDao;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.LoginService;
@@ -17,12 +18,23 @@ public class LoginServiceImpl implements LoginService{
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private AdminUserDao adminUserDao;
+	
 	public UserDao getUserDao() {
 		return userDao;
 	}
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+	
+	public AdminUserDao getAdminUserDao() {
+		return adminUserDao;
+	}
+
+	public void setAdminUserDao(AdminUserDao adminUserDao) {
+		this.adminUserDao = adminUserDao;
 	}
 
 	/**
@@ -63,6 +75,4 @@ public class LoginServiceImpl implements LoginService{
 		}
 		return users;
 	}
-
-	
 }

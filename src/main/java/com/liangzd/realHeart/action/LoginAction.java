@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.liangzd.realHeart.bean.ResponseJson;
-import com.liangzd.realHeart.bean.UserVo;
+import com.liangzd.realHeart.VO.AdminUserVo;
+import com.liangzd.realHeart.VO.ResponseJson;
+import com.liangzd.realHeart.VO.UserVo;
 import com.liangzd.realHeart.entity.User;
+import com.liangzd.realHeart.realm.CustomizedToken;
+import com.liangzd.realHeart.util.LoginType;
 
 //@ControllerAdvice
 @Controller
@@ -31,24 +34,30 @@ public class LoginAction {
 
     private static final transient Logger log = LoggerFactory.getLogger(LoginAction.class);
 	private ResponseJson responseJson;
-	
-	@RequestMapping(value = "/hello",method = RequestMethod.GET)
-    public String hello(Model model) {
-        model.addAttribute("name", "Dear");
-        return "hello";
-    }
 
+	/**
+	 * 
+	 * @Description: 用户登录校验 管理员登录校验
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年5月26日 上午2:05:12
+	 */
 	@ResponseBody
 	@RequestMapping("/verifyLogin")
 	public ResponseJson login(HttpServletRequest request,UserVo user){
-	    System.out.println("HomeController.login()");
+	    boolean isAdmin = user.getAdminUsername() == null ? false : true;
+		System.out.println("HomeController.login()");
 	    
 		Subject currentUser = SecurityUtils.getSubject();
 		responseJson = new ResponseJson();
-		UsernamePasswordToken token = null;
+		CustomizedToken token = null;
 		if (!currentUser.isAuthenticated()) {
-        	// 把用户名和密码封装为 UsernamePasswordToken 对象
-            token = new UsernamePasswordToken(user.getUserinp(),user.getPassword());
+			//判断是普通用户还是管理员,对应调用不同的realm进行验证
+			token = !isAdmin ? 
+					new CustomizedToken(user.getUserinp(),user.getPassword(),LoginType.USER.toString()) :
+						new CustomizedToken(user.getAdminUsername(),user.getAdminPassword(),LoginType.ADMIN.toString());
+        	// 把用户名和密码封装为 CustomizedToken 对象
 //            token.setRememberMe(true);
             try {
                 currentUser.login(token);
@@ -76,54 +85,25 @@ public class LoginAction {
 			succInfo.setJump(true);
 			succInfo.setMsg(token==null? (String) currentUser.getPrincipal(): token.getPrincipal()+"欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL("http://localhost:8080/index.html");
+			succInfo.setURL(isAdmin ? "http://localhost:8080/adminIndex.html":"http://localhost:8080/index.html");
 			responseJson.setMsg(succInfo);
 		}
 	    // 此方法不处理登录成功,由shiro进行处理
 	    return responseJson;
 	}
 	
-//	@ResponseBody
-//	@RequestMapping(value = "/verifyLogin",method = RequestMethod.POST)
-//    public ResponseJson verifyLogin(UserInfo userInfo) {
-//		System.out.println(userInfo.toString());
-//		System.out.println("验证登陆");
-//		responseJson = new ResponseJson();
-//		responseJson.setSuccess(true);
-//		responseJson.setMessage("登陆成功");
-//		responseJson.setData("/hello");
-//		System.out.println(JSON.toJSONString(responseJson));
+	/**
+	 * 
+	 * @Description: 管理员登录校验
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年5月26日 上午2:05:12
+	 */
+//	@RequestMapping(value = "/verifyAdminLogin",method = RequestMethod.POST)
+//    public ResponseJson registUser(AdminUserVo adminUser) {
+//		
 //        return responseJson;
 //    }
 
-	@RequestMapping(value = "/registUser",method = RequestMethod.POST)
-    public String registUser(User user) {
-		System.out.println(user.toString());
-		System.out.println("注册用户");
-        return "selfDetails";
-    }
-
-	@ResponseBody
-	@RequestMapping(value = "/getResult",method = RequestMethod.GET)
-    public ResponseJson getUser() {
-		responseJson = new ResponseJson();
-		responseJson.setCode(0);
-		responseJson.setMsg("ceshi");
-		System.out.println(JSON.toJSONString(responseJson));
-//		if(responseJson.getCode() == 0) {
-//			responseJson.setMsg(new SuccJson());
-//		}else{
-//			responseJson.setMsg(responseJson.getCode() == 1 ? "用户未注册" : "密码错误");
-//		}
-		responseJson.setMsg(new SuccJson(3,"15893866112欢迎您来到UI中国","http://www.ui.cn",true));
-		System.out.println(JSON.toJSONString(responseJson));
-		return responseJson;
-    }
-	
-//	@ExceptionHandler(value = Exception.class)
-//	public ModelAndView myErrorHandler(Exception ex) {
-//	    ModelAndView modelAndView = new ModelAndView();
-//	    modelAndView.setViewName("403");
-//	    return modelAndView;
-//	}
 }

@@ -1,4 +1,4 @@
-package com.liangzd.realHeart.bean;
+package com.liangzd.realHeart.VO;
 
 public class UserVo {
 	//正常登陆
@@ -23,7 +23,10 @@ public class UserVo {
 	//验证码与手机登陆验证码相同veri-code
 	//二维码验证码与正常登陆验证码相同veri
 
-
+	//管理员登录
+	private String adminUsername;
+	private String adminPassword;
+	
 	public String getVeri() {
 		return veri;
 	}
@@ -94,6 +97,22 @@ public class UserVo {
 
 	public void setPcTel(String pcTel) {
 		this.pcTel = pcTel;
+	}
+
+	public String getAdminUsername() {
+		return adminUsername;
+	}
+
+	public void setAdminUsername(String adminUsername) {
+		this.adminUsername = adminUsername;
+	}
+
+	public String getAdminPassword() {
+		return adminPassword;
+	}
+
+	public void setAdminPassword(String adminPassword) {
+		this.adminPassword = adminPassword;
 	}
 	
 }

@@ -14,26 +14,33 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.druid.util.StringUtils;
+import com.liangzd.realHeart.dao.AdminUserDao;
+import com.liangzd.realHeart.dao.UserDao;
 import com.liangzd.realHeart.entity.Permission;
 import com.liangzd.realHeart.entity.Role;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.LoginService;
+import com.liangzd.realHeart.util.MethodUtil;
 
-public class CustomerShiroRealm extends AuthorizingRealm{
+public class UserShiroRealm extends AuthorizingRealm{
 	@Autowired
-	private LoginService LoginService;
+	private UserDao userDao;
+
+	@Autowired
+	private AdminUserDao adminUserDao;
 	
-	public LoginService getLoginService() {
-		return LoginService;
+	public UserDao getUserDao() {
+		return userDao;
 	}
 
-	public void setLoginService(LoginService loginService) {
-		LoginService = loginService;
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
-
+	
 	@Override
 	public void setName(String name) {
-		super.setName("CustomerShiroRealm1");
+		super.setName("UserShiroRealm");
 	}
 	
 	@Override
@@ -41,12 +48,42 @@ public class CustomerShiroRealm extends AuthorizingRealm{
 	        throws AuthenticationException {
 	    //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
 //	    UserInfo userInfo = userInfoService.findByUsername(username);
-		User user = null;
-		Optional<User> users = LoginService.getUserByIdentity((String)token.getPrincipal());
-		if(users == null || !users.isPresent()) {
+//		User user = null;
+//		Optional<User> users = LoginService.getUserByIdentity((String)token.getPrincipal());
+		
+		String identityInfo = (String)token.getPrincipal();
+		User user;
+		Optional<User> users = null;
+		Optional<User> realUsers = null;
+		if(!StringUtils.isEmpty(identityInfo)) {
+			if(MethodUtil.isInteger(identityInfo)) {
+				if(identityInfo.length() >= 11) {
+					users = userDao.findByPhoneNumber(identityInfo);
+					if(users != null && users.isPresent()) {
+						realUsers = users.isPresent() ? users : null;
+					}
+				}else {
+					users = userDao.findById(Integer.parseInt(identityInfo));
+					if(users != null && users.isPresent()) {
+						realUsers = users.isPresent() ? users : null;
+					}
+				}
+			}else {
+				users = userDao.findByUsername(identityInfo);
+				if(users != null && users.isPresent()) {
+					realUsers = users;
+				}else {
+					users = userDao.findByEmail(identityInfo);
+					if(users != null && users.isPresent()) {
+						realUsers = users.isPresent() ? users : null;
+					}
+				}
+			}
+		}
+		if(realUsers == null || !realUsers.isPresent()) {
 			throw new UnknownAccountException();
 		}else {
-			user = users.get();
+			user = realUsers.get();
 		}
 	    SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
 	    		user.getUsername(), //用户名
