@@ -1,6 +1,5 @@
 package com.liangzd.realHeart;
 
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

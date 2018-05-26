@@ -85,7 +85,7 @@ public class LoginAction {
 			succInfo.setJump(true);
 			succInfo.setMsg(token==null? (String) currentUser.getPrincipal(): token.getPrincipal()+"欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL(isAdmin ? "http://localhost:8080/adminIndex.html":"http://localhost:8080/index.html");
+			succInfo.setURL(isAdmin ? "http://localhost:8080/filter/adminIndex":"http://localhost:8080/filter/index");
 			responseJson.setMsg(succInfo);
 		}
 	    // 此方法不处理登录成功,由shiro进行处理

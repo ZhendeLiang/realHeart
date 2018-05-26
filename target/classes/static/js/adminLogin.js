@@ -20,7 +20,7 @@ $(function(){
 					success:function(data){
 						debugger;
 						if (data.code == '0') {
-							window.location.href = data.msg.URL;
+							window.location.href = data.msg.url;
 						} else if(data.code == '1') {
 							alert('用户名不正确');
 							return false;
