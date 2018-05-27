@@ -13,61 +13,35 @@ layui.config({
 	 	if(window.sessionStorage.getItem("addUser")){
 	 		addUserArray = JSON.parse(window.sessionStorage.getItem("addUser"));
 	 	}
-	 	
-//	 	var userStatus,userGrade,userEndTime;
-//	 	//会员等级
-//	 	if(data.field.userGrade == '0'){
-// 			userGrade = "注册会员";
-// 		}else if(data.field.userGrade == '1'){
-// 			userGrade = "中级会员";
-// 		}else if(data.field.userGrade == '2'){
-// 			userGrade = "高级会员";
-// 		}else if(data.field.userGrade == '3'){
-// 			userGrade = "超级会员";
-// 		}
-// 		//会员状态
-// 		if(data.field.userStatus == '0'){
-// 			userStatus = "正常使用";
-// 		}else if(data.field.userStatus == '1'){
-// 			userStatus = "限制用户";
-// 		}
-//
-// 		addUser = '{"usersId":"'+ new Date().getTime() +'",';//id
-// 		addUser += '"userName":"'+ $(".userName").val() +'",';  //登录名
-// 		addUser += '"userEmail":"'+ $(".userEmail").val() +'",';	 //邮箱
-// 		addUser += '"userSex":"'+ data.field.gender +'",'; //性别
-// 		addUser += '"userStatus":"'+ userStatus +'",'; //会员等级
-// 		addUser += '"userGrade":"'+ userGrade +'",'; //会员状态
-// 		addUser += '"userEndTime":"'+ formatTime(new Date()) +'"}';  //登录时间
-// 		console.log(addUser);
-// 		addUserArray.unshift(JSON.parse(addUser));
-// 		window.sessionStorage.setItem("addUser",JSON.stringify(addUserArray));
-	 	
+
+	 	var uid = $("#uid").val();
 	 	var username = $("#username").val();
 	 	var password = $("#password").val();
 	 	var phoneNumber = $("#phoneNumber").val();
 	 	var email = $("#email").val();
 	 	var gender = data.field.gender;
-	 	var viprand = data.field.viprank;
+	 	var viprankName = data.field.viprank;
 	 	var state = data.field.userStatus;
 	 	var selfIntroduction = $("#selfIntroduction").val();
-	 	
+
+	 	console.log("uid:"+uid);
 	 	console.log("username:"+username);
 	 	console.log("password:"+password);
 	 	console.log("phoneNumber:"+phoneNumber);
 	 	console.log("email:"+email);
 	 	console.log("gender:"+gender);
-	 	console.log("viprand:"+viprand);
+	 	console.log("viprankName:"+viprankName);
 	 	console.log("state:"+state);
 	 	console.log("selfIntroduction:"+selfIntroduction);
  		//弹出loading
  		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
 	 	$.ajax({
 			url: '/filter/json/user',
-			type: 'post',
+			type: 'put',
 			dataType: 'json',
 			async: false,
 			data: {
+				uid : uid,
 				username : username,
 				password : password,
 				phoneNumber : phoneNumber,

@@ -18,8 +18,8 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	public Optional<User> findByUsername(String username);
 	public Optional<User> findByPhoneNumber(String phoneNumber);
 	
-	@Query(nativeQuery = true, value="SELECT" + 
-			" tu.uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
+	@Query(nativeQuery = true, value="SELECT DISTINCT" + 
+			" cast(tu.uid AS CHAR) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
 			" , tv.name viprank_name,cast(tu.state as char) as state"+ 
 			" ,tu.create_time,tu.nickname,tu.password,tu.id_card,tu.self_introduction" + 
 			" FROM" + 
@@ -30,4 +30,16 @@ public interface UserDao extends JpaRepository<User, Integer>{
 			"	tu.uid desc")
 	public List<Map<String,String>> findAllWithViprankName();
 	
+	@Query(nativeQuery = true, value="SELECT DISTINCT" + 
+			" cast(tu.uid AS CHAR) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
+			" , cast(tv. id AS CHAR)AS viprank_id,cast(tu.state as char) as state"+ 
+			" ,tu.create_time,tu.nickname,tu.password,tu.id_card,tu.self_introduction" + 
+			" FROM" + 
+			"	tb_user tu" + 
+			" LEFT JOIN tr_user_viprank tuv ON tu.uid = tuv.user_id" + 
+			" LEFT JOIN tb_viprank tv ON tv.id = tuv.viprank_id" +
+			" WHERE tu.uid = :uid" +
+			" ORDER BY" + 
+			"	tu.uid desc")
+	public Map<String,String> findUserByIdWithViprankName(@Param("uid") int uid);
 }

@@ -2,8 +2,10 @@ package com.liangzd.realHeart.service.impl;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -63,6 +65,7 @@ public class UserServiceImpl implements UserService{
 		List<User> users = new ArrayList<User>();
 		for(Map<String,String> map : maps) {
 			User user = new User();
+			user.setUid(Integer.parseInt(map.get("uid")));
 			user.setUsername(map.get("username"));
 			user.setGender(map.get("gender"));
 			user.setEmail(map.get("email"));
@@ -80,9 +83,37 @@ public class UserServiceImpl implements UserService{
 		User updateUser = userDao.saveAndFlush(user);
 		if(!StringUtils.isEmpty(user.getViprankName())) {
 			TrUserViprank trUserViprank = new TrUserViprank();
-			trUserViprank.setUserId(updateUser.getUid());
-			trUserViprank.setViprankId(Integer.parseInt(updateUser.getViprankName()));
+			int viprankId = Integer.parseInt(user.getViprankName());
+			Optional<TrUserViprank> result = trUserViprankDao.findByUserId(updateUser.getUid());
+			if(!result.isPresent()) {
+				trUserViprank.setUserId(updateUser.getUid());
+				trUserViprank.setViprankId(viprankId);
+			}else {
+				trUserViprank = result.get();
+				trUserViprank.setViprankId(viprankId);
+			}
 			trUserViprankDao.saveAndFlush(trUserViprank);
 		}
+	}
+
+	@Override
+	public Optional<User> findById(int id) {
+		Optional<User> findById = userDao.findById(id);
+		return findById;
+	}
+
+	@Override
+	public User findByIdWithViprankName(int id) {
+		Map<String,String> map= userDao.findUserByIdWithViprankName(id);
+		User user = new User();
+		user.setUid(Integer.parseInt(map.get("uid")));
+		user.setUsername(map.get("username"));
+		user.setGender(map.get("gender"));
+		user.setEmail(map.get("email"));
+		user.setPhoneNumber(map.get("phone_number"));
+		user.setViprankName(map.get("viprank_id"));
+		user.setState((byte)Integer.parseInt(map.get("state")));
+		user.setSelfIntroduction(map.get("self_introduction"));
+		return user;
 	}
 }

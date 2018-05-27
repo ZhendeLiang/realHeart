@@ -9,4 +9,6 @@ public interface UserService {
 	public List<User> findAllUsers();
 	public List<User> findAllUsersWithViprankName();
 	public void addUser(User user);
+	public Optional<User> findById(int id);
+	public User findByIdWithViprankName(int id);
 }
