@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +64,7 @@ public class LoginAction {
                 currentUser.login(token);
             	responseJson.setCode(0);
             	log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+            	request.getSession().setAttribute("username",token.getPrincipal());
             } catch (UnknownAccountException uae) {
             	responseJson.setCode(1);
                 log.info(token.getPrincipal()+"未注册");
@@ -85,7 +87,7 @@ public class LoginAction {
 			succInfo.setJump(true);
 			succInfo.setMsg(token==null? (String) currentUser.getPrincipal(): token.getPrincipal()+"欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL(isAdmin ? "http://localhost:8080/filter/adminIndex":"http://localhost:8080/filter/index");
+			succInfo.setURL(isAdmin ? "http://localhost:8080/adminIndex":"http://localhost:8080/filter/index");
 			responseJson.setMsg(succInfo);
 		}
 	    // 此方法不处理登录成功,由shiro进行处理

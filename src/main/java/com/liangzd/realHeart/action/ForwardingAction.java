@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@RequestMapping(value="/filter")
+//@RequestMapping(value="")
 @Controller
 public class ForwardingAction {
 
@@ -17,7 +17,7 @@ public class ForwardingAction {
 //        return "login";
 //    }
 
-	@RequestMapping(value = "/index",method = RequestMethod.GET)
+	@RequestMapping(value = "/filter/index",method = RequestMethod.GET)
     public String index() {
         return "index";
     }
