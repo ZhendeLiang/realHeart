@@ -42,4 +42,11 @@ public interface UserDao extends JpaRepository<User, Integer>{
 			" ORDER BY" + 
 			"	tu.uid desc")
 	public Map<String,String> findUserByIdWithViprankName(@Param("uid") int uid);
+	
+
+	public List<User> findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLikeAndStateLike(
+			String username, String email, String phoneNumber, String gender, Byte State);
+	
+	public List<User> findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLike(
+			String username, String email, String phoneNumber, String gender);
 }

@@ -48,7 +48,9 @@ public class User implements Serializable{
 	@JoinTable(name = "trUserRole", joinColumns = { @JoinColumn(name = "uid") }, inverseJoinColumns ={@JoinColumn(name = "roleId") })
 	private List<Role> roleList;// 一个用户具有多个角色
 	@Transient
-	private String viprankName; 
+	private String viprankName;
+	@Transient
+	private String addressId; 
 	
 	public Integer getUid() {
 		return uid;
@@ -127,5 +129,11 @@ public class User implements Serializable{
 	}
 	public void setViprankName(String viprankName) {
 		this.viprankName = viprankName;
+	}
+	public String getAddressId() {
+		return addressId;
+	}
+	public void setAddressId(String addressId) {
+		this.addressId = addressId;
 	}
 }

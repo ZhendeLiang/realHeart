@@ -2,7 +2,6 @@ package com.liangzd.realHeart.service.impl;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.dao.AdminUserDao;
+import com.liangzd.realHeart.dao.TrUserAddressDao;
 import com.liangzd.realHeart.dao.TrUserViprankDao;
 import com.liangzd.realHeart.dao.UserDao;
+import com.liangzd.realHeart.entity.TrUserAddress;
 import com.liangzd.realHeart.entity.TrUserViprank;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.UserService;
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private TrUserViprankDao trUserViprankDao;
+	
+	@Autowired
+	private TrUserAddressDao trUserAddressDao;
 	
 	public UserDao getUserDao() {
 		return userDao;
@@ -58,6 +62,14 @@ public class UserServiceImpl implements UserService{
 
 	public void setTrUserViprankDao(TrUserViprankDao trUserViprankDao) {
 		this.trUserViprankDao = trUserViprankDao;
+	}
+	
+	public TrUserAddressDao getTrUserAddressDao() {
+		return trUserAddressDao;
+	}
+
+	public void setTrUserAddressDao(TrUserAddressDao trUserAddressDao) {
+		this.trUserAddressDao = trUserAddressDao;
 	}
 
 	public List<User> findAllUsersWithViprankName() {
@@ -116,4 +128,56 @@ public class UserServiceImpl implements UserService{
 		user.setSelfIntroduction(map.get("self_introduction"));
 		return user;
 	}
+
+	@Override
+	public void deleteUser(User user) {
+		//删除用户会员外键信息
+		TrUserViprank trUserViprank = null; 
+		Optional<TrUserViprank> viprankResult = trUserViprankDao.findByUserId(user.getUid());
+		if(viprankResult.isPresent()) {
+			trUserViprank = viprankResult.get();
+			trUserViprankDao.delete(trUserViprank);
+		}
+		
+		//删除地址外键信息
+		List<TrUserAddress> addresss = trUserAddressDao.findByUserId(user.getUid());
+		if(addresss.size() != 0) {
+			for(TrUserAddress trUserAddress : addresss) {
+				trUserAddressDao.delete(trUserAddress);
+			}
+		}
+		
+		userDao.delete(user);
+	}
+
+	@Override
+	public List<User> findAllUserWithSearch(User user) {
+		List<User> users = null;
+		List<User> finallyUsers = new ArrayList<User>();
+		String username = StringUtils.isEmpty(user.getUsername()) ? "%" : "%"+user.getUsername()+"%";
+		String email = StringUtils.isEmpty(user.getEmail()) ? "%" : "%"+user.getEmail()+"%";
+		String phoneNumber = StringUtils.isEmpty(user.getPhoneNumber()) ? "%" : "%"+user.getPhoneNumber()+"%";
+		String gender = "-1".equals(user.getGender()) ? "%" : user.getGender();
+		if("-1".equals(String.valueOf(user.getState()))) {
+			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLike(
+					username, email, phoneNumber, gender);
+		}else {
+			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLikeAndStateLike(
+					username, email, phoneNumber, gender, user.getState());
+		}
+		if(!"-1".equals(user.getViprankName())) {
+			List<TrUserViprank> trUserVipranks = trUserViprankDao.findByViprankId(Integer.parseInt(user.getViprankName()));
+			for(User queryUser : users) {
+				for(TrUserViprank trUserViprank : trUserVipranks) {
+					if(trUserViprank.getUserId().equals(queryUser.getUid())) {
+						finallyUsers.add(queryUser);
+					}
+				}
+			}
+		}else {
+			finallyUsers = users;
+		}
+		return finallyUsers;
+	}
+	
 }

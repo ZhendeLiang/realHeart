@@ -15,18 +15,82 @@
 </head>
 <body class="childrenBody">
 	<blockquote class="layui-elem-quote news_search">
-		<div class="layui-inline">
-		    <div class="layui-input-inline">
-		    	<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
-		    </div>
-		    <a class="layui-btn search_btn">查询</a>
-		</div>
-		<div class="layui-inline">
-			<a class="layui-btn layui-btn-normal usersAdd_btn">添加用户</a>
-		</div>
-		<div class="layui-inline">
-			<a class="layui-btn layui-btn-danger batchDel">批量删除</a>
-		</div>
+		<form class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<div class="layui-inline">
+						<div class="layui-form-item">
+							<label class="layui-form-label">用户名</label>
+							<div class="layui-input-block">
+								<input id="username" type="text" class="layui-input" lay-verify="required phone" placeholder="用户名">
+							</div>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<div class="layui-form-item">
+							<label class="layui-form-label">手机</label>
+							<div class="layui-input-block">
+								<input id="phoneNumber" type="text" class="layui-input" lay-verify="required phone" placeholder="手机">
+							</div>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<div class="layui-form-item">
+							<label class="layui-form-label">邮箱</label>
+							<div class="layui-input-block">
+								<input id="email" type="text" class="layui-input" lay-verify="required phone" placeholder="邮箱">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+				    <div class="layui-inline">
+					    <label class="layui-form-label">性别</label>
+					    <div class="layui-input-block userSex">
+					      	<input type="radio" name="gender" value="-1" title="无" checked>
+					      	<input type="radio" name="gender" value="1" title="男">
+					      	<input type="radio" name="gender" value="0" title="女">
+					    </div>
+				    </div>
+				    <div class="layui-inline">
+					    <label class="layui-form-label">会员等级</label>
+						<div class="layui-input-block">
+							<select id="viprank" name="viprank" class="userGrade" lay-filter="userGrade">
+								<option value="-1">无</option>
+								<option value="1">普通会员</option>
+								<option value="2">青铜会员</option>
+						        <option value="3">白银会员</option>
+						        <option value="4">黄金会员</option>
+						        <option value="5">白金会员</option>
+						        <option value="6">钻石会员</option>
+						    </select>
+						</div>
+				    </div>
+				    <div class="layui-inline">
+					    <label class="layui-form-label">会员状态</label>
+						<div class="layui-input-block">
+							<select id="state" name="userStatus" class="userStatus" lay-filter="userStatus">
+								<option value="-1">无</option>
+								<option value="0">正常使用</option>
+								<option value="1">限制用户</option>
+						    </select>
+						</div>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+					    <a class="layui-btn search_btn">查询</a>
+					</div>
+					<div class="layui-inline">
+						<a class="layui-btn layui-btn-normal usersAdd_btn">添加用户</a>
+					</div>
+					<div class="layui-inline">
+						<a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+					</div>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
 	</blockquote>
 	<div class="layui-form news_list">
 	  	<table class="layui-table">
