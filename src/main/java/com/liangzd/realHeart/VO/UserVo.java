@@ -27,6 +27,8 @@ public class UserVo {
 	private String adminUsername;
 	private String adminPassword;
 	
+	private Integer verifyTimes;
+	
 	public String getVeri() {
 		return veri;
 	}
@@ -114,5 +116,12 @@ public class UserVo {
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
 	}
-	
+
+	public Integer getVerifyTimes() {
+		return verifyTimes;
+	}
+
+	public void setVerifyTimes(Integer verifyTimes) {
+		this.verifyTimes = verifyTimes;
+	}
 }

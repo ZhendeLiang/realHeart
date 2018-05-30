@@ -165,14 +165,15 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
-				debugger;
 				// var type = 'phone';
 				// 用户名				
 				var inp = $.trim($('#num').val());
 				// 密码
 				var pass = $.md5($.trim($('#pass').val()));
+				var verifyTimes = $("#verifyTimes").val();
+				var veri = $("#veri").val();
 				if (checkAccount(inp) && checkPass(pass)) {
-					var ldata = {userinp:inp,password:pass};
+					var ldata = {userinp:inp,password:pass,verifyTimes:verifyTimes,veri:veri};
 					if (!$('.code').hasClass('hide')) {
 						code = $.trim($('#veri').val());
 						if (!checkCode(code)) {
@@ -191,13 +192,16 @@ $(function(){
 			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
 			                    globalTip(data.msg);
 			                } else if(data.code == '2') {
+			                	$("#verifyTimes").val(Number($("#verifyTimes").val()) + 1);
 			                	$(".log-btn").off('click').addClass("off");
 			                    $('.pass-err').removeClass('hide').find('em').text(data.msg);
 			                    $('.pass-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
-			                    $('.code').removeClass('hide');
-			                    $('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
-			                    	$(this).attr('src', '/verifyCode?'+Math.random());
-			                    });;
+			                    if(data.usingVerifyCode == true){
+			                    	$('.code').removeClass('hide');
+			                    	$('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
+			                    		$(this).attr('src', '/verifyCode?'+Math.random());
+			                    	});
+			                    }
 			                    return false;
 			                } else if(data.code == '3') {
 			                	$(".log-btn").off('click').addClass("off");

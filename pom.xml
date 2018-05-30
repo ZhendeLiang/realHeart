@@ -91,6 +91,11 @@
             <artifactId>druid</artifactId>
             <version>1.0.28</version>
         </dependency>
+        <dependency>
+        	<groupId>com.liangzd</groupId>
+        	<artifactId>verifyCode</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 
 	<build>
