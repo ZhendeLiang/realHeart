@@ -19,8 +19,8 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	public Optional<User> findByPhoneNumber(String phoneNumber);
 	
 	@Query(nativeQuery = true, value="SELECT DISTINCT" + 
-			" cast(tu.uid AS CHAR) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
-			" , tv.name viprank_name,cast(tu.state as char) as state"+ 
+			" cast(tu.uid AS CHAR(10)) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
+			" , tv.name viprank_name,cast(tu.state as CHAR(10)) as state"+ 
 			" ,tu.create_time,tu.nickname,tu.password,tu.id_card,tu.self_introduction" + 
 			" FROM" + 
 			"	tb_user tu" + 
@@ -31,8 +31,8 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	public List<Map<String,String>> findAllWithViprankName();
 	
 	@Query(nativeQuery = true, value="SELECT DISTINCT" + 
-			" cast(tu.uid AS CHAR) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
-			" , cast(tv. id AS CHAR)AS viprank_id,cast(tu.state as char) as state"+ 
+			" cast(tu.uid AS CHAR(10)) AS uid,tu.username,tu.gender,tu.email,tu.phone_number" + 
+			" , cast(tv. id AS CHAR(10))AS viprank_id,cast(tu.state as CHAR(10)) as state"+ 
 			" ,tu.create_time,tu.nickname,tu.password,tu.id_card,tu.self_introduction" + 
 			" FROM" + 
 			"	tb_user tu" + 

@@ -7,8 +7,9 @@ public class UserVo {
 	private String veri;//二维码 验证码
 	
 	//手机登陆
-	private String num2;//手机登陆  手机号
+	private String phone;//手机登陆  手机号
 	private String veriCode;//手机登录 短信验证码 需要转
+	private String type;
 	
 	//用户注册  
 	private String tel;
@@ -53,12 +54,20 @@ public class UserVo {
 		this.veri = veri;
 	}
 
-	public String getNum2() {
-		return num2;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setNum2(String num2) {
-		this.num2 = num2;
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getVeriCode() {

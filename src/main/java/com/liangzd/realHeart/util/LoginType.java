@@ -1,7 +1,7 @@
 package com.liangzd.realHeart.util;
 
 public enum LoginType {
-    USER("User"),  ADMIN("Admin");
+    USER("User"), ADMIN("Admin");
 
     private String type;
 

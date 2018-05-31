@@ -125,6 +125,7 @@ $(function(){
 			$('.num2-err').text('手机号不合法，请重新输入');
 			return false;
 		}
+		debugger;
 		$.ajax({
             url: '/checkPhone',
             type: 'post',
@@ -235,11 +236,11 @@ $(function(){
 				var pcode = $.trim($('#veri-code').val());
 				if (checkPhone(phone) && checkPass(pcode)) {
 					$.ajax({
-			            url: '/plogin',
+			            url: '/phoneLogin',
 			            type: 'post',
 			            dataType: 'json',
 			            async: true,
-			            data: {phone:phone,code:pcode},
+			            data: {phone:phone,veriCode:pcode},
 			            success:function(data){
 			                if (data.code == '0') {
 			                	// globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
@@ -279,7 +280,7 @@ $(function(){
 		var phone = $.trim($('#num2').val());
 		if (checkPhone(phone)) {
 				$.ajax({
-		            url: '/getcode',
+		            url: '/getPhoneVerifyCode',
 		            type: 'post',
 		            dataType: 'json',
 		            async: true,
@@ -288,7 +289,7 @@ $(function(){
 		                if (data.code == '0') {
 		                    
 		                } else {
-		                    
+		                    alert(data.msg);
 		                }
 		            },
 		            error:function(){

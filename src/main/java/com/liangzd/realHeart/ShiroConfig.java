@@ -18,6 +18,12 @@ import com.liangzd.realHeart.realm.AdminShiroRealm;
 import com.liangzd.realHeart.realm.CustomizedModularRealmAuthenticator;
 import com.liangzd.realHeart.realm.UserShiroRealm;
 
+/**
+ * 
+ * @Description: Shiro的配置信息
+ * @author liangzd
+ * @date 2018年5月31日 下午4:44:33
+ */
 @Configuration
 public class ShiroConfig {
 	@Bean

@@ -13,4 +13,5 @@ public interface UserService {
 	public Optional<User> findById(int id);
 	public User findByIdWithViprankName(int id);
 	public void deleteUser(User user);
+	public Optional<User> findByPhoneNumber(String phoneNumber);
 }

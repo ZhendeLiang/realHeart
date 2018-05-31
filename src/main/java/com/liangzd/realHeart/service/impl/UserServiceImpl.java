@@ -72,6 +72,14 @@ public class UserServiceImpl implements UserService{
 		this.trUserAddressDao = trUserAddressDao;
 	}
 
+	/**
+	 * 
+	 * @Description: 获取所有用户，并级联抓取会员等级信息
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:51:45
+	 */
 	public List<User> findAllUsersWithViprankName() {
 		List<Map<String,String>> maps= userDao.findAllWithViprankName();
 		List<User> users = new ArrayList<User>();
@@ -89,6 +97,14 @@ public class UserServiceImpl implements UserService{
 		return users;
 	}
 
+	/**
+	 * 属于事务管理范畴
+	 * @Description: 添加用户，同时修改会员等级关系表
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:51:06
+	 */
 	@Transactional
 	@Override
 	public void addUser(User user) {
@@ -108,12 +124,28 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
+	/**
+	 * 
+	 * @Description: 根据Id查找用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:50:42
+	 */
 	@Override
 	public Optional<User> findById(int id) {
 		Optional<User> findById = userDao.findById(id);
 		return findById;
 	}
 
+	/**
+	 * 
+	 * @Description: 根据ID查找用户，级联抓取会员等级名字
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:50:14
+	 */
 	@Override
 	public User findByIdWithViprankName(int id) {
 		Map<String,String> map= userDao.findUserByIdWithViprankName(id);
@@ -129,6 +161,14 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 
+	/**
+	 * 
+	 * @Description: 删除用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:50:03
+	 */
 	@Override
 	public void deleteUser(User user) {
 		//删除用户会员外键信息
@@ -150,6 +190,14 @@ public class UserServiceImpl implements UserService{
 		userDao.delete(user);
 	}
 
+	/**
+	 * 
+	 * @Description: 条件查询所有用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:49:47
+	 */
 	@Override
 	public List<User> findAllUserWithSearch(User user) {
 		List<User> users = null;
@@ -178,6 +226,19 @@ public class UserServiceImpl implements UserService{
 			finallyUsers = users;
 		}
 		return finallyUsers;
+	}
+
+	/**
+	 * 
+	 * @Description: 根据手机好查找用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:53:14
+	 */
+	@Override
+	public Optional<User> findByPhoneNumber(String phoneNumber) {
+		return userDao.findByPhoneNumber(phoneNumber);
 	}
 	
 }
