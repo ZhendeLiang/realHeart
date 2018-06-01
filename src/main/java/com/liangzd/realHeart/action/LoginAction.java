@@ -64,13 +64,16 @@ public class LoginAction {
 			// 把用户名和密码封装为 CustomizedToken 对象
 			// token.setRememberMe(true);
 			boolean verifyCodeIsCorrect = false;
-			if(user.getVerifyTimes() < 3) {
-				request.getSession().setAttribute("code", "");
-			}
-			String correctVerifyCode = (String) request.getSession().getAttribute("code");
-			if (!StringUtils.isEmpty(correctVerifyCode)) {
-				if (!StringUtils.isEmpty(user.getVeri()) && correctVerifyCode.toLowerCase().equals(user.getVeri().toLowerCase())) {
-					verifyCodeIsCorrect = true;
+			String correctVerifyCode = "";
+			if(!isAdmin) {
+				if(user.getVerifyTimes() < 3) {
+					request.getSession().setAttribute("code", "");
+				}
+				correctVerifyCode = (String) request.getSession().getAttribute("code");
+				if (!StringUtils.isEmpty(correctVerifyCode)) {
+					if (!StringUtils.isEmpty(user.getVeri()) && correctVerifyCode.toLowerCase().equals(user.getVeri().toLowerCase())) {
+						verifyCodeIsCorrect = true;
+					}
 				}
 			}
 			if (StringUtils.isEmpty(correctVerifyCode) || verifyCodeIsCorrect) {
@@ -108,7 +111,7 @@ public class LoginAction {
 			succInfo.setJump(true);
 			succInfo.setMsg(token == null ? (String) currentUser.getPrincipal() : token.getPrincipal() + "欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL(isAdmin ? "/adminIndex" : "/filter/index");
+			succInfo.setURL(isAdmin ? "/adminWelcome" : "/filter/welcome");
 			responseJson.setMsg(succInfo);
 		}
 		// 此方法不处理登录成功,由shiro进行处理
@@ -144,7 +147,7 @@ public class LoginAction {
 					succInfo.setJump(true);
 					succInfo.setMsg(token == null ? (String) currentUser.getPrincipal() : token.getPrincipal() + "欢迎您");
 					succInfo.setSetTime(0);
-					succInfo.setURL("/filter/index");
+					succInfo.setURL("/filter/welcome");
 					responseJson.setMsg(succInfo);
 				}catch(Exception e) {
 					e.printStackTrace();
@@ -184,7 +187,7 @@ public class LoginAction {
 
 	/**
 	 * 
-	 * @Description: TODO(这里用一句话描述这个类的作用)
+	 * @Description:检查该手机号是否已注册
 	 * @param 
 	 * @return void
 	 * @author liangzd
@@ -206,7 +209,7 @@ public class LoginAction {
 	
 	/**
 	 * 
-	 * @Description: TODO(这里用一句话描述这个类的作用)
+	 * @Description:获取手机验证码
 	 * @param 
 	 * @return void
 	 * @author liangzd

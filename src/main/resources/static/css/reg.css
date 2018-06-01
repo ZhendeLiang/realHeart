@@ -1,11 +1,11 @@
 @charset "utf-8";
 body{
-    background-color: #3895e8;
+    background-color: #fcb09e;
 }
 .wrap{
     box-sizing: border-box;
     height: 100vh;
-    background: url("../img/bj.jpg") no-repeat center;
+    background: url("../img/bj2.jpg") no-repeat center;
     background-size: auto 100vh;
     position:  relative;
 }
@@ -81,7 +81,7 @@ body{
     z-index: 10;
 }
 .form-data .send:hover{
-    color: #3895e8;
+    color: #fcb09e;
 }
 .form-data .time{
     color: #969696;
@@ -143,10 +143,10 @@ input[type=number]::-webkit-outer-spin-button {
     color: #9e9e9e;
 }
 .reg_checkboxline a:hover{
-    color: #3895e8;
+    color: #fcb09e;
 }
 .reg_checkboxline i.boxcol {
-    background: #3498db;
+    background: #fcb09e;
     color: #fff;
 }
 .icon-ok-sign {
@@ -175,7 +175,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: block;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #42a5f5;
+    background-color: #fcb09e;
 }
 .form-data .lang-btn.off{
     color: #a0a0a0;
@@ -190,7 +190,7 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: center;
 }
 .bottom-info a{
-    color: #42a5f5;
+    color: #fcb09e;
 }
 .form-data .error{
     color: #ea5d5f;
@@ -208,7 +208,7 @@ input[type=number]::-webkit-outer-spin-button {
     color: #8d8d8d;
 }
 .form-data .r-forget a:hover{
-    color: #3895e8;
+    color: #fcb09e;
 }
 .form-data .third-party{
     width: 400px;
@@ -223,7 +223,7 @@ input[type=number]::-webkit-outer-spin-button {
     vertical-align: middle;
 }
 .form-data .third-party .icon-qq-round:hover{
-    color: #42a5f5;
+    color: #fcb09e;
 }
 .form-data .third-party .icon-weixin:hover{
     color: #0fccbc;
@@ -255,7 +255,7 @@ input[type=number]::-webkit-outer-spin-button {
     cursor: pointer;
 }
 .form-data .change-login p.on{
-    color: #76b9f7;
+    color: #fcb09e;
 }
 .find_password{
     background-color: #ffffff;
@@ -270,7 +270,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .find_password h4{
     font-size: 18px;
-    color: #42a5f5;
+    color: #fcb09e;
     text-align: center;
     width: 400px;
     margin: 0 auto;
@@ -283,7 +283,7 @@ input[type=number]::-webkit-outer-spin-button {
     color: #cacaca;
 }
 .find_password .right_now a{
-    color: #42a5f5;
+    color: #fcb09e;
 }
 .find_password .pc-very,.find_password .pc-code{
     display: none;
@@ -332,7 +332,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0 auto;
 }
 .find_password .again a{
-    color: #42a5f5;
+    color: #fcb09e;
 }
 .wrap .right{
     position: absolute;

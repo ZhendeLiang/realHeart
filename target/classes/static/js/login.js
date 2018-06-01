@@ -166,6 +166,7 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
+				debugger;
 				// var type = 'phone';
 				// 用户名				
 				var inp = $.trim($('#num').val());
@@ -190,6 +191,7 @@ $(function(){
 			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
+			                	debugger;
 			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
 			                    globalTip(data.msg);
 			                } else if(data.code == '2') {

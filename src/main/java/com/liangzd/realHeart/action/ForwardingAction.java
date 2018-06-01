@@ -17,9 +17,9 @@ public class ForwardingAction {
 //        return "login";
 //    }
 
-	@RequestMapping(value = "/filter/index",method = RequestMethod.GET)
-    public String index() {
-        return "index";
+	@RequestMapping(value = "/filter/welcome",method = RequestMethod.GET)
+    public String welcome() {
+        return "welcome";
     }
 
 //	@RequestMapping(value = "/403",method = RequestMethod.GET)
@@ -27,8 +27,13 @@ public class ForwardingAction {
 //        return "403";
 //    }
 
-	@RequestMapping(value = "/adminIndex",method = RequestMethod.GET)
-    public String adminIndex() {
-        return "adminIndex";
+	@RequestMapping(value = "/adminWelcome",method = RequestMethod.GET)
+    public String adminWelcome() {
+        return "adminWelcome";
     }
+
+	/*@RequestMapping(value = "/home/welcome",method = RequestMethod.GET)
+    public String homePage() {
+        return "/home/welcome";
+    }*/
 }

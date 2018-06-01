@@ -209,12 +209,12 @@ textarea {resize: none;}
 .lang-input{padding:14px 15px;height:20px;border:#e4e9ed 1px solid;border-radius:2px;background:#fff;color:#5d6d7e;font-size:16px;line-height:20px;box-sizing: content-box;}
 
 .lang-input:focus {
-    border: 1px solid #3498db;
+    border: 1px solid #fcb09e;
     box-shadow: 0 0 4px rgba(41, 128, 185, 0.4);
 }
 /* ç„¦ç‚¹/æˆåŠŸ */
 .lang-input-on, .lang-input-success {
-	border: #3498db 1px solid;
+	border: #fcb09e 1px solid;
 	box-shadow: 0 0 4px rgba(41, 128, 185, 0.4);
 	color: #34495e;
 }
@@ -240,7 +240,7 @@ textarea {resize: none;}
 .login-icon { display: block; height: 40px; width: 100%;  border-bottom: #e9ecee 1px solid; margin-top: 30px; }
 
 /* è¾“å…¥æ¡†æ´»åŠ¨çŠ¶æ€/æˆåŠŸ */
-.login-on, .login-success { border-bottom: #3498db 1px solid; }
+.login-on, .login-success { border-bottom: #fcb09e 1px solid; }
 .login-on .log-input, .login-error .log-input, .login-success .log-input { color: #5d6d7e; }
 .login-on .iconfont, .login-success .iconfont{color: #3A99D8;}
 
@@ -268,7 +268,7 @@ textarea:placeholder { color: #b8c4ce;}
 #ajax-hook{ position:fixed; top:0; z-index:99999; width:100%;}
 .globalInfoTip {z-index: 20; height: 60px;width: 100%;position: relative;cursor: pointer;}
 .globalInfoTip p {text-align: center;font-size: 16px;height: 30px;line-height: 30px;padding: 15px 0;color: #FFF;position: relative;}
-.globalInfoTip .infoTipBack {position: absolute;top: 0;left: 0;right: 0;bottom: 0;background: #3498db;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);opacity: 0.8;filter:alpha(opacity=80);-moz-opacity: 0.8;-khtml-opacity: 0.8;}
+.globalInfoTip .infoTipBack {position: absolute;top: 0;left: 0;right: 0;bottom: 0;background: #fcb09e;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);opacity: 0.8;filter:alpha(opacity=80);-moz-opacity: 0.8;-khtml-opacity: 0.8;}
 .msg-bor{border-bottom-color:#e74c3c}
 
 
