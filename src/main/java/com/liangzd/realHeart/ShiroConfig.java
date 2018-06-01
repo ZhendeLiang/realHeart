@@ -45,9 +45,9 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/adminI*/**", "authc");
 		filterChainDefinitionMap.put("/**", "anon");
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-		shiroFilterFactoryBean.setLoginUrl("/home/welcome.html");
+		shiroFilterFactoryBean.setLoginUrl("/index");
 		// 登录成功后要跳转的链接
-		shiroFilterFactoryBean.setSuccessUrl("/home/welcome.html");
+		shiroFilterFactoryBean.setSuccessUrl("/filter/welcome");
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

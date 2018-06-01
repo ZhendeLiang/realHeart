@@ -90,7 +90,7 @@ public class LoginAction {
 					responseJson.setCode(2);
 					log.info(token.getPrincipal() + "密码不正确");
 					responseJson.setMsg(token.getPrincipal() + "密码不正确");
-					responseJson.setUsingVerifyCode(user.getVerifyTimes() >= 3 ? true : false);
+					responseJson.setUsingVerifyCode((user.getVerifyTimes() != null && user.getVerifyTimes() >= 3) ? true : false);
 				} catch (LockedAccountException lae) {
 					log.info("The account for username " + token.getPrincipal() + " is locked.  "
 							+ "Please contact your administrator to unlock it.");

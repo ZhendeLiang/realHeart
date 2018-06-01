@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Single</title>
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+		<link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+		<link href="css/component.css" rel="stylesheet" type="text/css" />
+		<!-- Custom Theme files -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="Weekend Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+		<script type="application/x-javascript">
+			addEventListener("load", function() {
+				setTimeout(hideURLbar, 0);
+			}, false);
+
+			function hideURLbar() {
+				window.scrollTo(0, 1);
+			}
+		</script>
+		<!--web-fonts-->
+		<link href='http://fonts.useso.com/css?family=Philosopher:400,700,400italic,700italic|PT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+		<!--js-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.js">
+		</script>
+		<script src="js/modernizr.custom.js"></script>
+		<!--//js-->
+		<script type="text/javascript" src="js/move-top.js"></script>
+		<script type="text/javascript" src="js/easing.js"></script>
+		<!--/script-->
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({
+						scrollTop: $(this.hash).offset().top
+					}, 900);
+				});
+			});
+		</script>
+	</head>
+	<!--start-home-->
+
+	<body class="cbp-spmenu-push">
+		<!--top-header-->
+		<div id="house" class="top-header">
+			<div class="container">
+				<p class="col-md-3 location"><i class="glyphicon glyphicon-map-marker"></i>河南科技学院 计科(专升本171)</p>
+				<p class="col-md-3 phone"><i class="glyphicon glyphicon-phone"></i>181 3733 6103</p>
+				<p class="col-md-3 mail"><i class="glyphicon glyphicon-envelope"></i>
+					<a href="mailto:info@example.com">517610366@qq.com</a>
+				</p>
+				<div class="col-md-3">
+					<!--<form>
+						<input type="submit" value="">
+						<input type="text" value="Search " onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}">
+					</form>-->
+					<a href="/login.html">
+						<button type="button" class="btn btn-primary btn-lg" style="font-size: 20px;float: right;background-color: white;color: #FCB09E; border: 0px;">
+							<span class="glyphicon glyphicon-user"></span>点此登陆/注册
+						</button>
+					</a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<!--bottomner-->
+		<section class="buttonset">
+			<button id="showLeftPush"><img src="images/menu-icon.png" alt=""></button>
+		</section>
+		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+			<h3>Menu</h3>
+			<a href="index.html" class="active">Home</a>
+			<a href="about.html">About us</a>
+			<a href="service.html">services</a>
+			<a href="News.html">News</a>
+			<a href="gallery.html">Gallery</a>
+			<a href="contact.html">Contact</a>
+
+		</nav>
+		<div class="banner two">
+			<div class="logo two">
+				<a href="index.html">
+					<h1><span>Love</span> In <span>China</span></h1>
+					<p>Join Us</p>
+				</a>
+			</div>
+		</div>
+		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
+		<script src="js/classie.js"></script>
+		<script>
+			var menuLeft = document.getElementById('cbp-spmenu-s1'),
+				showLeftPush = document.getElementById('showLeftPush'),
+				showRightPush = document.getElementById('showRightPush'),
+				body = document.body;
+
+			showLeftPush.onclick = function() {
+				classie.toggle(this, 'active');
+				classie.toggle(body, 'cbp-spmenu-push-toright');
+				classie.toggle(menuLeft, 'cbp-spmenu-open');
+				disableOther('showLeftPush');
+			};
+
+			function disableOther(button) {
+				if(button !== 'showLeftPush') {
+					classie.toggle(showLeftPush, 'disabled');
+				}
+				if(button !== 'showRightPush') {
+					classie.toggle(showRightPush, 'disabled');
+				}
+			}
+		</script>
+		<!--single-->
+		<div class="single">
+			<div class="container">
+				<h3 class="tittle">Single Page</h3>
+				<div class="article-post two">
+					<div class="col-md-3 post-meta">
+						<div class="meta-icon">
+							<div class="pic">
+								<a href="#"> <i class="glyphicon glyphicon-picture"></i></a>
+							</div>
+						</div>
+						<ul class="ad-info">
+							<li>21 Aug'15</li>
+							<li>
+								<a href="#">John Doe</a>
+							</li>
+							<li>
+								<a href="#">24 Comments</a>
+							</li>
+						</ul>
+						<div class="clearfix"> </div>
+					</div>
+					<div class="col-md-9 post-details s-page">
+						<a href="#" class="mask"><img src="images/single.jpg" alt="image" class="img-responsive zoom-img"></a>
+						<a href="#">
+							<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4></a>
+						<p>Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. <b>Proin in iaculis neque.</b> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. </p>
+						<p class="eget">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. <b>Vivamus at elit quis urna adipiscing iaculis.</b> Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. </p>
+						<p class="eget">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur <b>vitae velit in neque dictum blandit.</b> Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus <b>et malesuada fames ac turpis egestas.</b> </p>
+					</div>
+					<!--post-details-->
+					<div class="clearfix"> </div>
+				</div>
+				<div class="top-single">
+					<div class="single-middle">
+						<ul class="social-share">
+							<li><span>SHARE</span></li>
+							<li>
+								<a href="#"><i> </i></a>
+							</li>
+							<li>
+								<a href="#"><i class="tin"> </i></a>
+							</li>
+							<li>
+								<a href="#"><i class="message"> </i></a>
+							</li>
+						</ul>
+						<a href="#"><i class="arrow"> </i></a>
+						<div class="clearfix"> </div>
+					</div>
+					<div class="top-comments">
+						<h3>10 Comments</h3>
+						<div class="met">
+							<div class="code-in">
+								<p class="smith">
+									<a href="#">Robert Smith</a> <span>05 march 2015, 15:20</span></p>
+								<p class="reply">
+									<a href="#"><i> </i>REPLY</a>
+								</p>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="comments-top-top">
+								<div class="men">
+									<img src="images/men.png" alt="">
+								</div>
+								<p class="men-it">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.The point of using Lorem Ipsum is that it has a more-or-less </p>
+								<div class="clearfix"> </div>
+							</div>
+						</div>
+						<div class="met met-in">
+							<div class="code-in">
+								<p class="smith">
+									<a href="#">Robert Smith</a> <span>02 april 2015, 15:20</span></p>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="comments-top-top top-in">
+								<div class="men">
+									<img src="images/men.png" alt="">
+								</div>
+								<p class="men-it two">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.The point of using Lorem Ipsum is that it has a more-or-less </p>
+								<div class="clearfix"> </div>
+							</div>
+						</div>
+						<div class="met">
+							<div class="code-in">
+								<p class="smith">
+									<a href="#">Robert Smith</a> <span>18 may 2015, 15:20</span></p>
+								<p class="reply">
+									<a href="#"><i> </i>REPLY</a>
+								</p>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="comments-top-top">
+								<div class="men">
+									<img src="images/men.png" alt="">
+								</div>
+								<p class="men-it">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.The point of using Lorem Ipsum is that it has a more-or-less </p>
+								<div class="clearfix"> </div>
+							</div>
+						</div>
+					</div>
+					<div class="leave">
+						<h3>Leave a comment</h3>
+						<form>
+							<div class="single-grid">
+								<div class="single-us">
+									<input type="text" value="Name" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'Name';}">
+									<input type="text" value="E-mail" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'E-mail';}">
+									<textarea value=" " onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'Comment';}">Comment</textarea>
+									<input type="submit" value="SEND">
+								</div>
+						</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--/footer-->
+		<div class="copy">
+			<p>Powered by © 2018
+				
+				
+			</p>
+		</div>
+		<!--/footer-->
+		<!--start-smoth-scrolling-->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+										var defaults = {
+								  			containerID: 'toTop', // fading element id
+											containerHoverID: 'toTopHover', // fading element hover id
+											scrollSpeed: 1200,
+											easingType: 'linear' 
+								 		};
+										*/
+
+				$().UItoTop({
+					easingType: 'easeOutQuart'
+				});
+
+			});
+		</script>
+		<a href="#house" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+	</body>
+
+</html>
