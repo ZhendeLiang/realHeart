@@ -24,19 +24,19 @@ public class User implements Serializable{
 	@Id
 	@GeneratedValue
 	private Integer uid;
-	@Column(unique = true,length = 10)
+	@Column(unique = true,length = 11)
 	private String username;
-	@Column(length = 25)
+	@Column(length = 25, unique = true)
 	private String nickname;
 	@Column(length = 128)
 	private String password;
 	@Column(length = 1)
 	private String gender;
-	@Column(length = 11)
+	@Column(length = 11, unique = true)
 	private String phoneNumber;
-	@Column(length = 18)
+	@Column(length = 18, unique = true)
 	private String idCard;
-	@Column(length = 320)
+	@Column(length = 320, unique = true)
 	private String email;
 	@Column(length = 1000)
 	private String selfIntroduction;//自我介绍

@@ -30,7 +30,10 @@
         		success:function(data){
         			console.log(data);
         			layui.jquery("#username").val(data.msg.username);
+        			layui.jquery("#originalUsername").val(data.msg.username);
         			layui.jquery("#phoneNumber").val(data.msg.phoneNumber);
+        			layui.jquery("#originalPhoneNumber").val(data.msg.phoneNumber);
+        			layui.jquery("#originalEmail").val(data.msg.email);
         			layui.jquery("#email").val(data.msg.email);
     				layui.jquery(":radio[name='gender'][value='" + data.msg.gender + "']").prop("checked", "checked");
         			layui.jquery("#viprank").val(data.msg.viprankName);
@@ -46,6 +49,9 @@
 <body class="childrenBody">
 	<form class="layui-form" style="width:80%;">
 		<input id="uid" type="hidden" class="layui-input userName" value="">
+		<input id="originalUsername" type="hidden" class="layui-input userName" value="">
+		<input id="originalPhoneNumber" type="hidden" class="layui-input userName" value="">
+		<input id="originalEmail" type="hidden" class="layui-input userName" value="">
 		<div class="layui-form-item">
 			<label class="layui-form-label">登录名</label>
 			<div class="layui-input-block">

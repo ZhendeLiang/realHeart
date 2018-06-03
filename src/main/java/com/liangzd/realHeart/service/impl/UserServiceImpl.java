@@ -230,7 +230,20 @@ public class UserServiceImpl implements UserService{
 
 	/**
 	 * 
-	 * @Description: 根据手机好查找用户
+	 * @Description: 根据用户名查找用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月2日 上午2:01:45
+	 */
+	@Override
+	public Optional<User> findByUsername(String username) {
+		return userDao.findByUsername(username);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据手机号查找用户
 	 * @param 
 	 * @return 
 	 * @author liangzd
@@ -240,5 +253,23 @@ public class UserServiceImpl implements UserService{
 	public Optional<User> findByPhoneNumber(String phoneNumber) {
 		return userDao.findByPhoneNumber(phoneNumber);
 	}
-	
+
+	/**
+	 * 
+	 * @Description: 根据邮箱查找用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月2日 上午2:01:45
+	 */
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userDao.findByEmail(email);
+	}
+
+	@Transactional
+	@Override
+	public void updateUserPassword(Integer uid, String password) {
+		userDao.updateUserPassword(uid, password);
+	}
 }

@@ -30,6 +30,12 @@ public class UserVo {
 	
 	private Integer verifyTimes;
 	
+	private String email;
+	private String username;
+	
+	private Integer uid;
+	private String verifyUUID;
+	
 	public String getVeri() {
 		return veri;
 	}
@@ -132,5 +138,37 @@ public class UserVo {
 
 	public void setVerifyTimes(Integer verifyTimes) {
 		this.verifyTimes = verifyTimes;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+
+	public String getVerifyUUID() {
+		return verifyUUID;
+	}
+
+	public void setVerifyUUID(String verifyUUID) {
+		this.verifyUUID = verifyUUID;
 	}
 }

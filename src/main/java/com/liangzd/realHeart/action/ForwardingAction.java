@@ -22,6 +22,10 @@ public class ForwardingAction {
         return "welcome";
     }
 
+	/*@RequestMapping(value = "/filter/resetpass",method = RequestMethod.GET)
+    public String resetpass() {
+        return "resetpass";
+    }*/
 //	@RequestMapping(value = "/403",method = RequestMethod.GET)
 //    public String errorPage() {
 //        return "403";

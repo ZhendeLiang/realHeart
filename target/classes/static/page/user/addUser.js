@@ -60,41 +60,114 @@ layui.config({
 	 	console.log("viprand:"+viprand);
 	 	console.log("state:"+state);
 	 	console.log("selfIntroduction:"+selfIntroduction);
- 		//弹出loading
- 		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
-	 	$.ajax({
-			url: '/filter/json/user',
-			type: 'post',
-			dataType: 'json',
-			async: false,
-			data: {
-				username : username,
-				password : password,
-				phoneNumber : phoneNumber,
-				email : email,
-				gender : data.field.gender,
-				viprankName : data.field.viprank,
-				state : data.field.userStatus,
-				selfIntroduction : selfIntroduction
-			},
-			success:function(data){
-				top.layer.close(index);
-				top.layer.msg(data.msg);
-	 			layer.closeAll("iframe");
-		 		//刷新父页面
-		 		parent.location.reload();
-			},
-			error:function(data){
-				top.layer.close(index);
-				top.layer.msg(data.msg);
-	 			layer.closeAll("iframe");
-		 		//刷新父页面
-		 		parent.location.reload();
-			}
-		});
- 		return false;
+ 		if(checkUsername(username) && checkPhone(phoneNumber) && checkEmail(email)){
+ 			//弹出loading
+ 			var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+	 		$.ajax({
+				url: '/filter/json/user',
+				type: 'post',
+				dataType: 'json',
+				async: false,
+				data: {
+					username : username,
+					password : password,
+					phoneNumber : phoneNumber,
+					email : email,
+					gender : data.field.gender,
+					viprankName : data.field.viprank,
+					state : data.field.userStatus,
+					selfIntroduction : selfIntroduction
+				},
+				success:function(data){
+					top.layer.close(index);
+					top.layer.msg(data.msg);
+		 			layer.closeAll("iframe");
+			 		//刷新父页面
+			 		parent.location.reload();
+				},
+				error:function(data){
+					top.layer.close(index);
+					top.layer.msg(data.msg);
+		 			layer.closeAll("iframe");
+			 		//刷新父页面
+			 		parent.location.reload();
+				}
+			});
+	 	}
+	 	return false;
  	})
 	
+ 	function checkUsername(username){
+		var status = true;
+		$.ajax({
+            url: '/checkUsername',
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            data: {username:username,type:"addUser"},
+            success:function(data){
+                if (data.code == '1') {
+                	status = true;
+                } else {
+                	status = false;
+                	alert(data.msg);
+                }
+            },
+            error:function(){
+            	status = false;
+            	alert(data.msg);
+            }
+        });
+		return status;
+	}
+ 	
+ 	function checkPhone(phone){
+		var status = true;
+		$.ajax({
+            url: '/checkPhone',
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            data: {phone:phone,type:"addUser"},
+            success:function(data){
+                if (data.code == '1') {
+                	status = true;
+                } else {
+                	status = false;
+                	alert(data.msg);
+                }
+            },
+            error:function(){
+            	status = false;
+            	alert(data.msg);
+            }
+        });
+		return status;
+	}
+ 	
+ 	function checkEmail(email){
+		var status = true;
+		$.ajax({
+            url: '/checkEmail',
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            data: {email:email,type:"addUser"},
+            success:function(data){
+                if (data.code == '1') {
+                	status = true;
+                } else {
+                	status = false;
+                	alert(data.msg);
+                }
+            },
+            error:function(){
+            	status = false;
+            	alert(data.msg);
+            }
+        });
+		return status;
+	}
 })
 
 //格式化时间

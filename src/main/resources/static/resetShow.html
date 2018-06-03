@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>找回密码-UI中国-专业界面交互设计平台</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/iconfont.css">
+    <link rel="stylesheet" href="./css/reg.css">
+</head>
+<body>
+<div id="ajax-hook"></div>
+<div class="wrap">
+    <div class="wpn">
+        <div class="form-data find_password">
+            <h4>找回密码</h4>
+            <p class="right_now">已有账号，<a href="login.html">马上登录</a></p>
+            <p class="jihuo_email">我们已向您的注册邮箱<span id="hideEmail"></span></p>
+            <p class="jihuo_email">发送了一封密码找回的邮件</p>
+            <input id="verifyUUID" type="hidden" value="">
+            <a id="emailType" class="lang-btn next" href="http://mail.qq.com/" target="_black">进入邮箱</a>
+            <p class="again">没有收到？<a class="resetsend" href="javascript:;">重新发送</a></p>
+            <p class="right">京ICP备14007358号-1 \ 京公网安备11010802014104号 \ Powered by © 2008-2018 UI.CN</p>
+        </div>
+    </div>
+</div>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/agree.js"></script>
+<script src="./js/msgTip.js"></script>
+<script>
+    $('.resetsend').click(function(){
+    	var verifyUUID = $("#verifyUUID").val();
+        $.ajax({
+            url: '/resetSendEmail',
+            type: 'post',
+            dataType: 'json',
+            async: true,
+            data: {verifyUUID:verifyUUID},
+            success:function(data){
+                if (data.code == '0') {
+                    globalTip({'msg':'邮件发送成功!','setTime':3});
+                } else if(data.code == '2'){
+                    globalTip({'msg':'请查收邮件，五分钟未收到尝试再次发送','setTime':3});
+                } else {
+                    globalTip({'msg':'邮件发送失败!','setTime':3});
+                }
+            },
+            error:function(){
+                
+            }
+        });
+    });
+    
+    $(function(){
+   		//获取Location对象的search属性值
+   		var paramStr = location.search;
+   		//由于searchStr属性值包括“?”，所以除去该字符 
+   		paramStr = paramStr.substr(1);
+   		//将searchStr字符串分割成数组，数组中的每一个元素为一个参数和参数值 
+   		var params = paramStr.split("&");
+   		$("#hideEmail").html(params[0].split("=")[1]);
+   		$("#emailType").attr("href",params[1].split("=")[1]);
+   		$("#verifyUUID").val(params[2].split("=")[1]);
+    })
+</script>
+
+</body>
+</html>

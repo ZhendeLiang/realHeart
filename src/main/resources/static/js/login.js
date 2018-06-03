@@ -201,8 +201,12 @@ $(function(){
 			                    $('.pass-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
 			                    if(data.usingVerifyCode == true){
 			                    	$('.code').removeClass('hide');
-			                    	$('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
+			                    	/*$('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
 			                    		$(this).attr('src', '/verifyCode?'+Math.random());
+			                    	});*/
+			                    	$('.code').find('img').attr('src','/verifyCode?type=login&'+Math.random()).click(function(event) {
+			                    		debugger;
+			                    		$(this).attr('src', '/verifyCode?type=login&'+Math.random());
 			                    	});
 			                    }
 			                    return false;
@@ -210,10 +214,13 @@ $(function(){
 			                	$(".log-btn").off('click').addClass("off");
 			                    $('.img-err').removeClass('hide').find('em').text(data.msg);
 			                    $('.img-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
-			                    $('.code').removeClass('hide');
+			                    /*$('.code').removeClass('hide');
 			                    $('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
 			                    	$(this).attr('src', '/verifyCode?'+Math.random());
-			                    });
+			                    });*/
+		                    	$('.code').find('img').attr('src','/verifyCode?type=login&'+Math.random()).click(function(event) {
+		                    		$(this).attr('src', '/verifyCode?type=login&'+Math.random());
+		                    	});
 			                    return false;
 			                } else if(data.code == '1'){
 			                	$(".log-btn").off('click').addClass("off");
