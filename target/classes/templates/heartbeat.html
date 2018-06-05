@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="/welcome/css/bootstrap.min.css">
+		<script src="/js/jquery.min.js"></script>
+		<script src="/welcome/js/vendor/bootstrap.min.js"></script>
+	</head>
+
+	<body>
+		<!-- 第一页 轮播图-->
+		<div id="myCarousel" class="carousel slide" data-wrap="false">
+			<!-- 轮播（Carousel）项目 -->
+			<div class="carousel-inner">
+				<div name="carouselList" class="item" th:each="userAndImg,listStat:${heartbeatLists}" th:id="${'carouselList'+listStat.index}">
+					<img th:src="${userAndImg.headImg}" src="img/page1/carousel1.jpg" alt="First slide">
+				</div>
+			</div>
+			<a id="nextUser" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+				<span id="spanGlyRight" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+		<input type="hidden" id="pageNum" th:value="${pageNum}" value="">
+		<input type="hidden" id="totalCount" th:value="${totalCount}" value="">
+		<input type="hidden" id="currentPageCount" th:value="${currentPageCount}" value="">
+		<select id="pageSize" name="pageSize" class="form-control">
+			<option value="5">每页5个</option>
+			<option value="10">每页10个</option>
+			<option value="15">每页15个</option>
+			<option value="20">每页20个</option>
+			<option value="25">每页25个</option>
+		</select>
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="listAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-body">进入下一组</div>
+		            <div class="modal-footer">
+		                <button id="ensureIntoNextBtn" type="button" class="btn btn-primary">再来一波</button>
+		            </div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal -->
+		</div>
+	<script th:inline="javascript">
+		$(function(){
+			$('#myCarousel').carousel('pause');
+			$("#pageSize").val([[${pageSize}]]);
+			
+			$($("div[name='carouselList']")[0]).addClass("active");
+			
+			$('#nextUser').on('click', function(event) {
+				var currentPageCount = $("#currentPageCount").val();
+				if($("#carouselList"+currentPageCount).attr('class') == 'item active'){
+					$("#nextUser").removeAttr("data-slide");
+					$('#listAlertModal').modal();
+				}
+			});
+			
+			$('#ensureIntoNextBtn').on('click', function(event) {
+				var pageNum = $("#pageNum").val();
+				var pageSize = $("#pageSize").val();
+				$('#listAlertModal').modal('hide');
+				$.ajax({
+		            url: '/filter/json/heartbeatNext',
+		            type: 'get',
+		            dataType: 'json',
+		            async: false,
+		            data: {
+		            	pageNum:parseInt(pageNum)+parseInt(1),
+		            	pageSize:pageSize
+		            	},
+		            success:function(data){
+		                if (data.code == '0') {
+		                	$("#pageNum").val(data.pageNum);
+		                	$("#pageSize").val(data.pageSize);
+		                	$("#totalCount").val(data.totalCount);
+		        			$("#currentPageCount").val(data.currentPageCount);
+							$(".carousel-inner").html('');
+		                	/* var htmlText = '';
+		                	data.msg.each(function(index){
+		                		htmlText += '<div name="carouselList" class="item" id="carouselList'+index+
+								+'"><img src="'+data.msg.headImg+'" alt="First slide"></div>';
+		                	});
+		                	console.log(htmlText);
+							$(".carousel-inner").html(htmlText); */
+							var htmlText = '';
+							for(i = 0; i < data.msg.length; i++) {
+								htmlText += '<div name="carouselList" class="item';
+								if(i==0){
+									htmlText +=" active";
+								}
+								htmlText += '" id="carouselList'+i
+								+'"><img src="'+data.msg[i].headImg+'" alt="First slide"></div>';
+							}
+							$(".carousel-inner").html(htmlText);
+							$("#nextUser").attr("data-slide","next");
+		                }else{
+		                	alert(data.msg);
+		                }
+		            },
+		            error:function(){
+		            	status = false;
+		            }
+		        });
+			});
+			
+			/* /filter/json/heartbeatNext
+			<div name="carouselList" class="item" id="carouselList0"><img src="/img/defaultHeadImg.jpg" alt="First slide"></div>
+			
+			*/
+		})
+	</script>
+	</body>
+</html>

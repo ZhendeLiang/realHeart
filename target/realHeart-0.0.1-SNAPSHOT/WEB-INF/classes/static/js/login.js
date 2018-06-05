@@ -166,6 +166,7 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
+				debugger;
 				// var type = 'phone';
 				// 用户名				
 				var inp = $.trim($('#num').val());
@@ -190,6 +191,7 @@ $(function(){
 			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
+			                	debugger;
 			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
 			                    globalTip(data.msg);
 			                } else if(data.code == '2') {
@@ -199,8 +201,12 @@ $(function(){
 			                    $('.pass-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
 			                    if(data.usingVerifyCode == true){
 			                    	$('.code').removeClass('hide');
-			                    	$('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
+			                    	/*$('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
 			                    		$(this).attr('src', '/verifyCode?'+Math.random());
+			                    	});*/
+			                    	$('.code').find('img').attr('src','/verifyCode?type=login&'+Math.random()).click(function(event) {
+			                    		debugger;
+			                    		$(this).attr('src', '/verifyCode?type=login&'+Math.random());
 			                    	});
 			                    }
 			                    return false;
@@ -208,10 +214,13 @@ $(function(){
 			                	$(".log-btn").off('click').addClass("off");
 			                    $('.img-err').removeClass('hide').find('em').text(data.msg);
 			                    $('.img-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
-			                    $('.code').removeClass('hide');
+			                    /*$('.code').removeClass('hide');
 			                    $('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
 			                    	$(this).attr('src', '/verifyCode?'+Math.random());
-			                    });
+			                    });*/
+		                    	$('.code').find('img').attr('src','/verifyCode?type=login&'+Math.random()).click(function(event) {
+		                    		$(this).attr('src', '/verifyCode?type=login&'+Math.random());
+		                    	});
 			                    return false;
 			                } else if(data.code == '1'){
 			                	$(".log-btn").off('click').addClass("off");
@@ -236,11 +245,11 @@ $(function(){
 				var pcode = $.trim($('#veri-code').val());
 				if (checkPhone(phone) && checkPass(pcode)) {
 					$.ajax({
-			            url: '/plogin',
+			            url: '/phoneLogin',
 			            type: 'post',
 			            dataType: 'json',
 			            async: true,
-			            data: {phone:phone,code:pcode},
+			            data: {phone:phone,veriCode:pcode},
 			            success:function(data){
 			                if (data.code == '0') {
 			                	// globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
@@ -280,7 +289,7 @@ $(function(){
 		var phone = $.trim($('#num2').val());
 		if (checkPhone(phone)) {
 				$.ajax({
-		            url: '/getcode',
+		            url: '/getPhoneVerifyCode',
 		            type: 'post',
 		            dataType: 'json',
 		            async: true,
@@ -289,7 +298,7 @@ $(function(){
 		                if (data.code == '0') {
 		                    
 		                } else {
-		                    
+		                    alert(data.msg);
 		                }
 		            },
 		            error:function(){

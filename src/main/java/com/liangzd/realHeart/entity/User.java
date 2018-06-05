@@ -136,4 +136,11 @@ public class User implements Serializable{
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
 	}
+	@Override
+	public String toString() {
+		return "User [uid=" + uid + ", username=" + username + ", nickname=" + nickname + ", password=" + password
+				+ ", gender=" + gender + ", phoneNumber=" + phoneNumber + ", idCard=" + idCard + ", email=" + email
+				+ ", selfIntroduction=" + selfIntroduction + ", state=" + state + ", createTime=" + createTime
+				+ ", roleList=" + roleList + ", viprankName=" + viprankName + ", addressId=" + addressId + "]";
+	}
 }

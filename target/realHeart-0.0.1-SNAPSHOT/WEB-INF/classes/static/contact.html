@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Contact</title>
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+		<link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+		<link href="css/component.css" rel="stylesheet" type="text/css" />
+		<!-- Custom Theme files -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="Weekend Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+		<script type="application/x-javascript">
+			addEventListener("load", function() {
+				setTimeout(hideURLbar, 0);
+			}, false);
+
+			function hideURLbar() {
+				window.scrollTo(0, 1);
+			}
+		</script>
+		<!--web-fonts-->
+		<link href='http://fonts.useso.com/css?family=Philosopher:400,700,400italic,700italic|PT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+		<!--js-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.js">
+		</script>
+		<script src="js/modernizr.custom.js"></script>
+		<!--//js-->
+		<script type="text/javascript" src="js/move-top.js"></script>
+		<script type="text/javascript" src="js/easing.js"></script>
+		<!--/script-->
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({
+						scrollTop: $(this.hash).offset().top
+					}, 900);
+				});
+			});
+		</script>
+
+	</head>
+	<!--start-home-->
+
+	<body class="cbp-spmenu-push">
+		<!--top-header-->
+		<div id="house" class="top-header">
+			<div class="container">
+				<p class="col-md-3 location"><i class="glyphicon glyphicon-map-marker"></i>河南科技学院 计科(专升本171)</p>
+				<p class="col-md-3 phone"><i class="glyphicon glyphicon-phone"></i>181 3733 6103</p>
+				<p class="col-md-3 mail"><i class="glyphicon glyphicon-envelope"></i>
+					<a href="mailto:info@example.com">517610366@qq.com</a>
+				</p>
+				<div class="col-md-3">
+					<!--<form>
+						<input type="submit" value="">
+						<input type="text" value="Search " onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}">
+					</form>-->
+					<a href="/login.html">
+						<button type="button" class="btn btn-primary btn-lg" style="font-size: 20px;float: right;background-color: white;color: #FCB09E; border: 0px;">
+							<span class="glyphicon glyphicon-user"></span>点此登陆/注册
+						</button>
+					</a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<!--bottomner-->
+		<section class="buttonset">
+			<button id="showLeftPush"><img src="images/menu-icon.png" alt=""></button>
+		</section>
+		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+			<h3>Menu</h3>
+			<a href="index.html" class="active">Home</a>
+			<a href="about.html">About us</a>
+			<a href="service.html">services</a>
+			<a href="News.html">News</a>
+			<a href="gallery.html">Gallery</a>
+			<a href="contact.html">Contact</a>
+
+		</nav>
+		<div class="banner two">
+			<div class="logo two">
+				<a href="index.html">
+					<h1><span>Love</span> In <span>China</span></h1>
+					<p>Join Us</p>
+				</a>
+			</div>
+		</div>
+		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
+		<script src="js/classie.js"></script>
+		<script>
+			var menuLeft = document.getElementById('cbp-spmenu-s1'),
+				showLeftPush = document.getElementById('showLeftPush'),
+				showRightPush = document.getElementById('showRightPush'),
+				body = document.body;
+
+			showLeftPush.onclick = function() {
+				classie.toggle(this, 'active');
+				classie.toggle(body, 'cbp-spmenu-push-toright');
+				classie.toggle(menuLeft, 'cbp-spmenu-open');
+				disableOther('showLeftPush');
+			};
+
+			function disableOther(button) {
+				if(button !== 'showLeftPush') {
+					classie.toggle(showLeftPush, 'disabled');
+				}
+				if(button !== 'showRightPush') {
+					classie.toggle(showRightPush, 'disabled');
+				}
+			}
+		</script>
+		<!--start-contact-->
+		<div class="contact_desc">
+			<div class="container">
+				<h3 class="tittle">Contact Us</h3>
+				<div class="contact-form">
+					<form class="left_form">
+						<div>
+							<span><label>NAME</label></span>
+							<span><input name="userName" type="text" class="textbox"></span>
+						</div>
+						<div>
+							<span><label>E-MAIL</label></span>
+							<span><input name="userEmail" type="text" class="textbox"></span>
+						</div>
+						<div>
+							<span><label>Fax</label></span>
+							<span><input name="userPhone" type="text" class="textbox"></span>
+						</div>
+					</form>
+					<form class="right_form">
+						<div>
+							<span><label>SUBJECT</label></span>
+							<span><textarea name="userMsg"> </textarea></span>
+						</div>
+						<div>
+							<input type="submit" value="Submit " />
+						</div>
+					</form>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+		<!--/footer-->
+		<div class="copy">
+			<p>Powered by © 2018
+			</p>
+		</div>
+		<!--/footer-->
+		<!--start-smoth-scrolling-->
+		<script type="text/javascript">
+			$(document).ready(function() {
+
+				$().UItoTop({
+					easingType: 'easeOutQuart'
+				});
+
+			});
+		</script>
+		<a href="#house" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+	</body>
+
+</html>

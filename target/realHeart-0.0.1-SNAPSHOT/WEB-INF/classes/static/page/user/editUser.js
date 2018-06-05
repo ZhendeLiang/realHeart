@@ -16,9 +16,12 @@ layui.config({
 
 	 	var uid = $("#uid").val();
 	 	var username = $("#username").val();
+	 	var originalUsername = $("#originalUsername").val();
 	 	var password = $("#password").val();
 	 	var phoneNumber = $("#phoneNumber").val();
+	 	var originalPhoneNumber = $("#originalPhoneNumber").val();
 	 	var email = $("#email").val();
+	 	var originalEmail = $("#originalEmail").val();
 	 	var gender = data.field.gender;
 	 	var viprankName = data.field.viprank;
 	 	var state = data.field.userStatus;
@@ -33,41 +36,123 @@ layui.config({
 	 	console.log("viprankName:"+viprankName);
 	 	console.log("state:"+state);
 	 	console.log("selfIntroduction:"+selfIntroduction);
- 		//弹出loading
- 		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
-	 	$.ajax({
-			url: '/filter/json/user',
-			type: 'put',
-			dataType: 'json',
-			async: false,
-			data: {
-				uid : uid,
-				username : username,
-				password : password,
-				phoneNumber : phoneNumber,
-				email : email,
-				gender : data.field.gender,
-				viprankName : data.field.viprank,
-				state : data.field.userStatus,
-				selfIntroduction : selfIntroduction
-			},
-			success:function(data){
-				top.layer.close(index);
-				top.layer.msg(data.msg);
-	 			layer.closeAll("iframe");
-		 		//刷新父页面
-		 		parent.location.reload();
-			},
-			error:function(data){
-				top.layer.close(index);
-				top.layer.msg(data.msg);
-	 			layer.closeAll("iframe");
-		 		//刷新父页面
-		 		parent.location.reload();
-			}
-		});
+	 	debugger;
+	 	if(checkUsername(username,originalUsername) && checkPhone(phoneNumber,originalPhoneNumber) && checkEmail(email,originalEmail)){
+	 		//弹出loading
+	 		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+	 		$.ajax({
+	 			url: '/filter/json/user',
+	 			type: 'put',
+	 			dataType: 'json',
+	 			async: false,
+	 			data: {
+	 				uid : uid,
+	 				username : username,
+	 				password : password,
+	 				phoneNumber : phoneNumber,
+	 				email : email,
+	 				gender : data.field.gender,
+	 				viprankName : data.field.viprank,
+	 				state : data.field.userStatus,
+	 				selfIntroduction : selfIntroduction
+	 			},
+	 			success:function(data){
+	 				top.layer.close(index);
+	 				top.layer.msg(data.msg);
+	 				layer.closeAll("iframe");
+	 				//刷新父页面
+	 				parent.location.reload();
+	 			},
+	 			error:function(data){
+	 				top.layer.close(index);
+	 				top.layer.msg(data.msg);
+	 				layer.closeAll("iframe");
+	 				//刷新父页面
+	 				parent.location.reload();
+	 			}
+	 		});
+	 	}
  		return false;
  	})
+ 	
+
+ 	function checkUsername(username,originalUsername){
+		var status = true;
+		if(username != originalUsername){
+			$.ajax({
+	            url: '/checkUsername',
+	            type: 'post',
+	            dataType: 'json',
+	            async: false,
+	            data: {username:username,type:"addUser"},
+	            success:function(data){
+	                if (data.code == '1') {
+	                	status = true;
+	                } else {
+	                	status = false;
+	                	alert(data.msg);
+	                }
+	            },
+	            error:function(){
+	            	status = false;
+	            	alert(data.msg);
+	            }
+	        });
+		}
+		return status;
+	}
+ 	
+ 	function checkPhone(phoneNumber,originalPhoneNumber){
+		var status = true;
+		if(phoneNumber != originalPhoneNumber){
+			$.ajax({
+	            url: '/checkPhone',
+	            type: 'post',
+	            dataType: 'json',
+	            async: false,
+	            data: {phone:phone,type:"addUser"},
+	            success:function(data){
+	                if (data.code == '1') {
+	                	status = true;
+	                } else {
+	                	status = false;
+	                	alert(data.msg);
+	                }
+	            },
+	            error:function(){
+	            	status = false;
+	            	alert(data.msg);
+	            }
+	        });
+		}
+		return status;
+	}
+ 	
+ 	function checkEmail(email,originalEmail){
+		var status = true;
+		if(email != originalEmail){
+			$.ajax({
+	            url: '/checkEmail',
+	            type: 'post',
+	            dataType: 'json',
+	            async: false,
+	            data: {email:email,type:"addUser"},
+	            success:function(data){
+	                if (data.code == '1') {
+	                	status = true;
+	                } else {
+	                	status = false;
+	                	alert(data.msg);
+	                }
+	            },
+	            error:function(){
+	            	status = false;
+	            	alert(data.msg);
+	            }
+	        });
+		}
+		return status;
+	}
 	
 })
 

@@ -3,6 +3,8 @@ package com.liangzd.realHeart.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 import com.liangzd.realHeart.entity.User;
 
 public interface UserService {
@@ -17,4 +19,6 @@ public interface UserService {
 	public Optional<User> findByPhoneNumber(String phoneNumber);
 	public Optional<User> findByEmail(String email);
 	public void updateUserPassword(Integer uid, String password);
+	public User queryByIdentityInfo(String identityInfo);
+	public Page<User> findByGenderAndState(String gender,Byte state, Integer pageNum, Integer pageSize);
 }

@@ -9,6 +9,10 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.druid.util.StringUtils;
@@ -20,6 +24,7 @@ import com.liangzd.realHeart.entity.TrUserAddress;
 import com.liangzd.realHeart.entity.TrUserViprank;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.UserService;
+import com.liangzd.realHeart.util.MethodUtil;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -271,5 +276,42 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void updateUserPassword(Integer uid, String password) {
 		userDao.updateUserPassword(uid, password);
+	}
+	
+	public User queryByIdentityInfo(String identityInfo) {
+		Optional<User> users = null;
+		if(!StringUtils.isEmpty(identityInfo)) {
+			if(MethodUtil.isInteger(identityInfo)) {
+				if(identityInfo.length() >= 11) {
+					users = userDao.findByPhoneNumber(identityInfo);
+					if(users != null && users.isPresent()) {
+						return users.get();
+					}
+				}else {
+					users = userDao.findById(Integer.parseInt(identityInfo));
+					if(users != null && users.isPresent()) {
+						return users.get();
+					}
+				}
+			}else {
+				users = userDao.findByUsername(identityInfo);
+				if(users != null && users.isPresent()) {
+					return users.get();
+				}else {
+					users = userDao.findByEmail(identityInfo);
+					if(users != null && users.isPresent()) {
+						return users.get();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Page<User> findByGenderAndState(String gender, Byte state, Integer pageNum, Integer pageSize) {
+		Sort sort = new Sort(Sort.Direction.ASC,"uid"); //创建时间降序排序
+		Pageable pageable = PageRequest.of(pageNum,pageSize,sort);
+		return userDao.findByGenderAndState(gender, state, pageable);
 	}
 }
