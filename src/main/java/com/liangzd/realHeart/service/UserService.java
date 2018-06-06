@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import com.liangzd.realHeart.entity.TrUserViprank;
 import com.liangzd.realHeart.entity.User;
 
 public interface UserService {
@@ -20,5 +21,6 @@ public interface UserService {
 	public Optional<User> findByEmail(String email);
 	public void updateUserPassword(Integer uid, String password);
 	public User queryByIdentityInfo(String identityInfo);
-	public Page<User> findByGenderAndState(String gender,Byte state, Integer pageNum, Integer pageSize);
+	public Page<User> findByGenderAndState(String gender,Byte state, Integer pageNum, Integer pageSize, List<Integer> uids);
+	public TrUserViprank findUserViprankByUserId(Integer id);
 }

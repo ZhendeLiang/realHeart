@@ -23,8 +23,10 @@ import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.VO.ResponseJson;
 import com.liangzd.realHeart.VO.UserImgVo;
 import com.liangzd.realHeart.entity.TbUserImg;
+import com.liangzd.realHeart.entity.TbUserRelation;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.UserImgService;
+import com.liangzd.realHeart.service.UserRelationService;
 import com.liangzd.realHeart.service.UserService;
 import com.liangzd.realHeart.util.ConstantParams;
 import com.liangzd.realHeart.util.MethodUtil;
@@ -40,6 +42,9 @@ public class UserManageAction {
 	@Autowired
 	private UserImgService userImgService;
 
+	@Autowired
+	private UserRelationService userRelationService;
+	
 	public UserService getUserService() {
 		return userService;
 	}
@@ -54,6 +59,14 @@ public class UserManageAction {
 
 	public void setUserImgService(UserImgService userImgService) {
 		this.userImgService = userImgService;
+	}
+
+	public UserRelationService getUserRelationService() {
+		return userRelationService;
+	}
+
+	public void setUserRelationService(UserRelationService userRelationService) {
+		this.userRelationService = userRelationService;
 	}
 
 	private static final transient Logger log = LoggerFactory.getLogger(UserManageAction.class);
@@ -360,8 +373,9 @@ public class UserManageAction {
 		Integer pageSize = StringUtils.isEmpty(request.getParameter("pageSize")) ?
 				10 : Integer.parseInt(request.getParameter("pageSize"));
 		User currentUser = userService.queryByIdentityInfo((String) request.getSession().getAttribute("username"));
-		Page<User> users = userService.findByGenderAndState(currentUser.getGender() == ConstantParams.TB_USER_GENDER_FEMALE ? ConstantParams.TB_USER_GENDER_MALE : ConstantParams.TB_USER_GENDER_FEMALE
-				, ConstantParams.TB_USER_STATE_NORMAL, pageNum-1, pageSize);
+		List<Integer> uids = userRelationService.findByUid(currentUser.getUid());
+		Page<User> users = userService.findByGenderAndState(ConstantParams.TB_USER_GENDER_FEMALE.equals(currentUser.getGender()) ? ConstantParams.TB_USER_GENDER_MALE : ConstantParams.TB_USER_GENDER_FEMALE
+				, ConstantParams.TB_USER_STATE_NORMAL, pageNum-1, pageSize, uids);
 		long totalCount = users.getTotalElements();
 		List<UserImgVo> userAndimgLists = new ArrayList<UserImgVo>();
 		UserImgVo userImg = null;
@@ -388,4 +402,40 @@ public class UserManageAction {
 		}
         return responseJson;
     }
+	
+
+	/**
+	 * 
+	 * @Description:处理用户关系
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月7日 上午12:56:52
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/sendUserRelation", method = RequestMethod.POST)
+	public ResponseJson sendUserRelation(HttpServletRequest request) {
+		String relation = request.getParameter("relation");
+		if(!StringUtils.isEmpty(relation) && !StringUtils.isEmpty(request.getParameter("targetUid"))) {
+			Integer targetUid = Integer.parseInt(request.getParameter("targetUid"));
+			User hasUser = userService.queryByIdentityInfo((String)request.getSession().getAttribute("username"));
+			if (hasUser != null) {
+				TbUserRelation tbUserRelation = new TbUserRelation();
+				tbUserRelation.setFirstUid(hasUser.getUid());
+				tbUserRelation.setFirstUserRelation(relation);
+				tbUserRelation.setSecondUid(targetUid);
+				userRelationService.saveUserRelation(tbUserRelation);
+				responseJson.setCode(0);
+				responseJson.setMsg("0".equals(relation) ? 
+						"如果对方喜欢你的话,就会出现在你的好友列表里面哦" : "莫生气，再来一个看看");
+			}else {
+				responseJson.setCode(2);
+				responseJson.setMsg("当前登陆用户异常");
+			}
+		}else {
+			responseJson.setCode(1);
+			responseJson.setMsg("关系不明确或对象找不到");
+		}
+		return responseJson;
+	}
 }

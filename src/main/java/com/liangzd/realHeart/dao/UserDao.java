@@ -57,7 +57,7 @@ public interface UserDao extends JpaRepository<User, Integer>{
     @Query("update tb_user tu set tu.password = :password where tu.uid = :uid")
 	public void updateUserPassword(@Param("uid")Integer uid, @Param("password")String password);
 	
-	public List<User> findByGenderAndState(String gender,Byte state);
-	
-	public Page<User> findByGenderAndState(String gender,Byte state, Pageable pageable);
+	@Query(nativeQuery=true,value="SELECT * FROM tb_user WHERE gender = :gender AND state = :state AND uid NOT IN (:uids)")
+	public Page<User> findByGenderAndStateNotInUids(@Param("gender") String gender,@Param("state") Byte state, 
+			@Param("uids") List<Integer> Uid, Pageable pageable);
 }

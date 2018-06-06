@@ -18,28 +18,41 @@
 		    font-weight: 700;
 		    color: black;
 		    letter-spacing: 0.5px;
-		    display: inline-block;
+		}
+		#likeButton,#dislikeButton{
+			position: absolute;
+			z-index: 999;
+			left:30%;
+			top:40%;
+			opacity: 0.8;
+		}
+		#dislikeButton{
+			left:40%;
 		}
 	</style>
 </head>
 
 <body>
+	<div id="selectButton">
+		<button lang="0" id="likeButton" type="button" class="btn btn-default btn-lg" style="font-size: 36px; background: rgba(252, 176, 158, 0.5);">喜欢</button>
+		<button lang="1" id="dislikeButton" type="button" class="btn btn-default btn-lg" style="font-size: 36px; background: rgba(255, 255, 255, 0.5);">不喜欢</button>
+	</div>
 	<!-- 第一页 轮播图-->
 	<div id="myCarousel" class="carousel slide" data-wrap="false">
 		<!-- 轮播（Carousel）项目 -->
 		<div class="carousel-inner">
-			<div name="carouselList" class="item" th:each="userAndImg,listStat:${heartbeatLists}" th:id="${'carouselList'+listStat.index}">
-				<img th:src="${userAndImg.headImg}" src="img/page1/carousel1.jpg" alt="First slide">
+			<div name="carouselList" class="item" th:each="userAndImg,listStat:${heartbeatLists}" th:id="${'carouselList'+listStat.index}" th:lang="${userAndImg.uid}">
+				<img onclick="showPersonalDetails()" th:src="${userAndImg.headImg}" src="img/page1/carousel1.jpg" alt="First slide">
 				<p class="nickname" th:text="${userAndImg.nickname}" style="height: 0px;"></p>
 			</div>
 		</div>
-		<a id="nextUser" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+		<a style="display: none;" id="nextUser" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
 			<span id="spanGlyRight" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 			<span class="sr-only">Next</span>
 		</a>
 	</div>
 	
-<ul class="pagination" style="margin-bottom: 0px;margin-top: 0px;position: relative;top: -77px;">
+<ul class="pagination" style="margin-bottom: 0px;margin-top: 0px;position: relative;top: -33px;">
     <li class="disabled"><a id="displayPageNum" href="#" th:text="'当前第'+${pageNum}+'组'">1</a></li>
     <li class="disabled"><a id="displayTotalCount" href="#" th:text="'总共拥有'+${totalCount}+'位嘉宾'">2</a></li>
     <li class="disabled"><a href="#">每页显示</a></li>
@@ -61,7 +74,6 @@
 		<option value="20">每页20个</option>
 		<option value="25">每页25个</option>
 	</select>
-	
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="listAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
 	    <div class="modal-dialog">
@@ -73,7 +85,27 @@
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal -->
 	</div>
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="personalDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-body">
+	            	<iframe id="iframeHeartbeat" name="mainFrame" scrolling="no" 
+            				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal -->
+	</div>
 <script th:inline="javascript">
+function showPersonalDetails(){
+	var targetUid = $("div[name=carouselList].active").attr("lang");
+	/* document.getElementById('personalDetailsModal').src="personalDetails?uid="+targetUid; */
+	/* document.getElementById('personalDetailsModal').contentWindow.location.reload(true); */
+	$("#iframeHeartbeat").attr("src","personalDetails?uid="+targetUid); 
+	$('#personalDetailsModal').modal();
+}
+
 $(function(){
 	$('#myCarousel').carousel('pause');
 	$("#pageSize").val([[${pageSize}]]);
@@ -86,6 +118,28 @@ $(function(){
 			$("#nextUser").removeAttr("data-slide");
 			$('#listAlertModal').modal();
 		}
+	});
+	
+	$('#dislikeButton,#likeButton').on('click', function(event){
+		document.getElementById("nextUser").click();
+		var targetUid = $("div[name=carouselList].active").attr("lang");
+		var relation = $(this).attr("lang");
+		$.ajax({
+            url: '/filter/json/sendUserRelation',
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            data: {
+            	relation:relation,
+            	targetUid:targetUid
+            },
+            success:function(data){
+               	alert(data.msg);
+            },
+            error:function(){
+            	status = false;
+            }
+        });
 	});
 	
 	$('#ensureIntoNextBtn').on('click', function(event) {
@@ -112,7 +166,7 @@ $(function(){
 					$(".carousel-inner").html('');
 					var htmlText = '';
 					for(i = 0; i < data.msg.length; i++) {
-						htmlText += '<div name="carouselList" class="item';
+						htmlText += '<div lang="'+data.msg[i].uid+'" name="carouselList" class="item';
 						if(i==0){
 							htmlText +=" active";
 						}
@@ -155,7 +209,7 @@ $(function(){
 					$(".carousel-inner").html('');
 					var htmlText = '';
 					for(i = 0; i < data.msg.length; i++) {
-						htmlText += '<div name="carouselList" class="item';
+						htmlText += '<div lang="'+data.msg[i].uid+'" name="carouselList" class="item';
 						if(i==0){
 							htmlText +=" active";
 						}
@@ -199,7 +253,7 @@ function changePageSize(pageSize){
 					$(".carousel-inner").html('');
 					var htmlText = '';
 					for(i = 0; i < data.msg.length; i++) {
-						htmlText += '<div name="carouselList" class="item';
+						htmlText += '<div lang="'+data.msg[i].uid+'" name="carouselList" class="item';
 						if(i==0){
 							htmlText +=" active";
 						}
