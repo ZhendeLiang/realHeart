@@ -36,7 +36,7 @@
 
 		</div>
 
-		<nav>
+		<nav id="menuListNav">
 			<div class="logo">
 				<img src="/welcome/img/ui.png" alt="">
 			</div>
@@ -58,6 +58,9 @@
 				</li>
 				<li>
 					<a href="#5"><i class="fa fa-signal"></i> <em>等级提升</em></a>
+				</li>
+				<li>
+					<a onclick="logout()" href="/logout"><i class="fa fa-sign-out"></i> <em>注销</em></a>
 				</li>
 			</ul>
 		</nav>
@@ -90,54 +93,48 @@
 						<div class="col-md-6">
 							<div class="left-content">
 								<h2>个人详情</h2>
-								<!-- <p>Please tell your friends about templatemo website. A variety of free CSS templates are available for immediate downloads.</p>
-								<p>Phasellus vitae faucibus orci. Etiam eleifend orci sed faucibus semper. Cras varius dolor et augue fringilla, eu commodo sapien iaculis. Donec eget dictum tellus.
-									<a href="#">Curabitur</a> a interdum diam. Nulla vestibulum porttitor porta.</p>
-								<p>Nulla vitae interdum libero, vel posuere ipsum. Phasellus interdum est et dapibus tempus. Vestibulum malesuada lorem condimentum mauris ornare dapibus. Curabitur tempor ligula et
-									<a href="#">placerat</a> molestie.</p>
-								<p>Aliquam efficitur eu purus in interdum.
-									<a href="#">Etiam tincidunt</a> magna ex, sit amet lobortis felis bibendum id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
 								<div class="main-btn">
-									<a href="#3">Read More</a>
-								</div> -->
-								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">姓名:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.username}"></p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">昵称:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.nickname}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">性别:</a>
 										<p style="display: inline-block; margin-left: 20px;" th:if=" ${userInfo.gender} == '0'">女</p>
 										<p style="display: inline-block; margin-left: 20px;" th:if=" ${userInfo.gender} == '1'">男</p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">邮箱:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.email}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">手机号:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.phoneNumber}"></p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">身份证:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.idCard}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<a href="#3">创建时间:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.createTime}"></p>
+									<div class="col-md-12">
+										<a href="#3">创建时间:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.createTime}"></p>
+									</div>
 								</div>
 								<div class="main-btn">
-									<a href="#3">个人简介:</a>
-									<fieldset>
-										<textarea th:text="${userInfo.selfIntroduction}" name="message" rows="6" class="form-control" id="message" placeholder="Your message..." required=""></textarea>
-									</fieldset>
+									<div class="col-md-12">
+										<a href="#3">个人简介:</a>
+										<fieldset>
+											<textarea th:text="${userInfo.selfIntroduction}" name="message" rows="6" class="form-control" id="message" placeholder="Your message..." required=""></textarea>
+										</fieldset>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-2" th:each="img:${userBackgroundImgs}">
+						<div class="col-md-3" th:each="img:${userBackgroundImgs}">
 							<div class="detailsDiv"><a th:href="${img}" target="_blank" href="#"><img class="col-xs-2 col-sm-2 col-md-2" th:src="${img}" src=""/></a></div>
 						</div>
 					</div>
@@ -153,8 +150,10 @@
 			<div class="slide" id="4">
 				<div class="content fourth-content">
 					<div class="container-fluid">
-						<iframe src="heartbeat?pageNum=1&pageSize=10" id="iframepage" frameborder="0" scrolling="no" 
-							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="800"></iframe>
+						<!-- <iframe src="heartbeat?pageNum=1&pageSize=10" id="iframeHeartbeat" frameborder="0" scrolling="no" 
+							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="700"></iframe> -->
+						<iframe id="iframeHeartbeat" name="mainFrame" scrolling="no" src="heartbeat?pageNum=1&pageSize=10"
+            				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
 					</div>
 				</div>
 			</div>
@@ -162,7 +161,6 @@
 				<div class="content fifth-content">
 					<div class="container-fluid">
 						<div class="col-md-6">
-
 						</div>
 						<div class="col-md-6">
 							<form id="contact" action="" method="post">
@@ -304,7 +302,7 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<iframe  th:src="${uploadImageAndParams}" src="uploadImage?type=1" id="iframepage" frameborder="0" scrolling="yes" 
+						<iframe  th:src="${uploadImageAndParams}" src="uploadImage?type=1" id="iframeUploadImage" frameborder="0" scrolling="yes" 
 							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="680"></iframe>
 					</div>
 				</div><!-- /.modal-content -->
@@ -324,7 +322,75 @@
 		<script src="/welcome/js/main.js"></script>
 
 		<script th:inline="javascript">
+			startInit('iframeHeartbeat', 560);
+			var browserVersion = window.navigator.userAgent.toUpperCase();
+			var isOpera = browserVersion.indexOf("OPERA") > -1 ? true : false;
+			var isFireFox = browserVersion.indexOf("FIREFOX") > -1 ? true : false;
+			var isChrome = browserVersion.indexOf("CHROME") > -1 ? true : false;
+			var isSafari = browserVersion.indexOf("SAFARI") > -1 ? true : false;
+			var isIE = (!!window.ActiveXObject || "ActiveXObject" in window);
+			var isIE9More = (! -[1,] == false);
+			function reinitIframe(iframeId, minHeight) {
+			    try {
+			        var iframe = document.getElementById(iframeId);
+			        var bHeight = 0;
+			        if (isChrome == false && isSafari == false) {
+			            try {
+			                bHeight = iframe.contentWindow.document.body.scrollHeight;
+			            } catch (ex) {                
+			            }
+			        }
+			        var dHeight = 0;
+			        if (isFireFox == true)
+			            dHeight = iframe.contentWindow.document.documentElement.offsetHeight + 2;//如果火狐浏览器高度不断增加删除+2
+			        else if (isIE == false && isOpera == false && iframe.contentWindow) {
+			            try {
+			                dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+			            } catch (ex) {
+			            }
+			        }
+			        else if (isIE == true && isIE9More) {//ie9+
+			            var heightDeviation = bHeight - eval("window.IE9MoreRealHeight" + iframeId);
+			            if (heightDeviation == 0) {
+			                bHeight += 3;
+			            } else if (heightDeviation != 3) {
+			                eval("window.IE9MoreRealHeight" + iframeId + "=" + bHeight);
+			                bHeight += 3;
+			            }
+			        }
+			        else//ie[6-8]、OPERA
+			            bHeight += 3;
+
+			        var height = Math.max(bHeight, dHeight);
+			        if (height < minHeight) height = minHeight;
+			        //alert(iframe.contentWindow.document.body.scrollHeight + "~" + iframe.contentWindow.document.documentElement.scrollHeight);
+			        iframe.style.height = height + "px";
+			    } catch (ex) { }
+			}
+			function startInit(iframeId, minHeight) {
+			    eval("window.IE9MoreRealHeight" + iframeId + "=0");
+			    window.setInterval("reinitIframe('" + iframeId + "'," + minHeight + ")", 100);
+			}
+			
 			$(document).ready(function() {
+				var gender = $("#updateGender").val();
+				if(gender == "0"){
+					$("#menuListNav").css("background","rgba(252, 176, 158, 0.5)");
+					$(".first-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".second-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".third-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".fourth-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".fifth-content").css("background","rgba(252, 176, 158, 0.5)");
+				}else{
+					$(".logo").html('<img src="/welcome/img/ui2.png" alt="">');
+					$(".mini-logo").html('<img src="/welcome/img/ui2.png" alt="">');
+				}
+				$("#iframeHeartbeat").height(0);
+				$("#iframeHeartbeat").attr("src","heartbeat?pageNum=1&pageSize=10");
+				/* debugger;
+				var ifm = document.getElementById("iframeHeartbeat");
+				var ifm.height = $("div .fourth-content").height(); */
+				
 				// navigation click actions 
 				$('.scroll-link').on('click', function(event) {
 					event.preventDefault();
@@ -422,7 +488,9 @@
 					log: function() {}
 				};
 			}
+			function logout(){
+				window.location.href="/logout";
+			}
 		</script>
 	</body>
-
 </html>

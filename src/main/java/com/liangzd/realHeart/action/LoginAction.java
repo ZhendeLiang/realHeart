@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.liangzd.realHeart.VO.EmailVo;
 import com.liangzd.realHeart.VO.ResponseJson;
+import com.liangzd.realHeart.VO.SuccJson;
 import com.liangzd.realHeart.VO.TestPhone;
 import com.liangzd.realHeart.VO.UserVo;
 import com.liangzd.realHeart.entity.User;
@@ -120,7 +121,7 @@ public class LoginAction {
 			succInfo.setJump(true);
 			succInfo.setMsg(token == null ? (String) currentUser.getPrincipal() : token.getPrincipal() + "欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL(isAdmin ? "/adminWelcome" : "/filter/welcome");
+			succInfo.setURL(isAdmin ? "/filter/adminWelcome" : "/filter/welcome");
 			responseJson.setMsg(succInfo);
 		}
 		// 此方法不处理登录成功,由shiro进行处理

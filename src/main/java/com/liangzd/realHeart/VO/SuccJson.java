@@ -1,4 +1,4 @@
-package com.liangzd.realHeart.action;
+package com.liangzd.realHeart.VO;
 
 public class SuccJson {
 	private Integer setTime;

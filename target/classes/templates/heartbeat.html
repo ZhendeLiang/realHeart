@@ -1,117 +1,222 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" href="/welcome/css/bootstrap.min.css">
-		<script src="/js/jquery.min.js"></script>
-		<script src="/welcome/js/vendor/bootstrap.min.js"></script>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/welcome/css/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/welcome/js/vendor/bootstrap.min.js"></script>
+	<style type="text/css">
+		.nickname{
+			position: relative;
+		    opacity: 0.8;
+			bottom: 80px;
+			margin: 0px;
+		    font-size: 36px;
+		    text-transform: uppercase;
+		    font-weight: 700;
+		    color: black;
+		    letter-spacing: 0.5px;
+		    display: inline-block;
+		}
+	</style>
+</head>
 
-	<body>
-		<!-- 第一页 轮播图-->
-		<div id="myCarousel" class="carousel slide" data-wrap="false">
-			<!-- 轮播（Carousel）项目 -->
-			<div class="carousel-inner">
-				<div name="carouselList" class="item" th:each="userAndImg,listStat:${heartbeatLists}" th:id="${'carouselList'+listStat.index}">
-					<img th:src="${userAndImg.headImg}" src="img/page1/carousel1.jpg" alt="First slide">
-				</div>
+<body>
+	<!-- 第一页 轮播图-->
+	<div id="myCarousel" class="carousel slide" data-wrap="false">
+		<!-- 轮播（Carousel）项目 -->
+		<div class="carousel-inner">
+			<div name="carouselList" class="item" th:each="userAndImg,listStat:${heartbeatLists}" th:id="${'carouselList'+listStat.index}">
+				<img th:src="${userAndImg.headImg}" src="img/page1/carousel1.jpg" alt="First slide">
+				<p class="nickname" th:text="${userAndImg.nickname}" style="height: 0px;"></p>
 			</div>
-			<a id="nextUser" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-				<span id="spanGlyRight" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-				<span class="sr-only">Next</span>
-			</a>
 		</div>
-		<input type="hidden" id="pageNum" th:value="${pageNum}" value="">
-		<input type="hidden" id="totalCount" th:value="${totalCount}" value="">
-		<input type="hidden" id="currentPageCount" th:value="${currentPageCount}" value="">
-		<select id="pageSize" name="pageSize" class="form-control">
-			<option value="5">每页5个</option>
-			<option value="10">每页10个</option>
-			<option value="15">每页15个</option>
-			<option value="20">每页20个</option>
-			<option value="25">每页25个</option>
-		</select>
-		<!-- 模态框（Modal） -->
-		<div class="modal fade" id="listAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
-		    <div class="modal-dialog">
-		        <div class="modal-content">
-		            <div class="modal-body">进入下一组</div>
-		            <div class="modal-footer">
-		                <button id="ensureIntoNextBtn" type="button" class="btn btn-primary">再来一波</button>
-		            </div>
-		        </div><!-- /.modal-content -->
-		    </div><!-- /.modal -->
-		</div>
-	<script th:inline="javascript">
-		$(function(){
-			$('#myCarousel').carousel('pause');
-			$("#pageSize").val([[${pageSize}]]);
-			
-			$($("div[name='carouselList']")[0]).addClass("active");
-			
-			$('#nextUser').on('click', function(event) {
-				var currentPageCount = $("#currentPageCount").val();
-				if($("#carouselList"+currentPageCount).attr('class') == 'item active'){
-					$("#nextUser").removeAttr("data-slide");
-					$('#listAlertModal').modal();
-				}
-			});
-			
-			$('#ensureIntoNextBtn').on('click', function(event) {
-				var pageNum = $("#pageNum").val();
-				var pageSize = $("#pageSize").val();
-				$('#listAlertModal').modal('hide');
-				$.ajax({
-		            url: '/filter/json/heartbeatNext',
-		            type: 'get',
-		            dataType: 'json',
-		            async: false,
-		            data: {
-		            	pageNum:parseInt(pageNum)+parseInt(1),
-		            	pageSize:pageSize
-		            	},
-		            success:function(data){
-		                if (data.code == '0') {
-		                	$("#pageNum").val(data.pageNum);
-		                	$("#pageSize").val(data.pageSize);
-		                	$("#totalCount").val(data.totalCount);
-		        			$("#currentPageCount").val(data.currentPageCount);
-							$(".carousel-inner").html('');
-		                	/* var htmlText = '';
-		                	data.msg.each(function(index){
-		                		htmlText += '<div name="carouselList" class="item" id="carouselList'+index+
-								+'"><img src="'+data.msg.headImg+'" alt="First slide"></div>';
-		                	});
-		                	console.log(htmlText);
-							$(".carousel-inner").html(htmlText); */
-							var htmlText = '';
-							for(i = 0; i < data.msg.length; i++) {
-								htmlText += '<div name="carouselList" class="item';
-								if(i==0){
-									htmlText +=" active";
-								}
-								htmlText += '" id="carouselList'+i
-								+'"><img src="'+data.msg[i].headImg+'" alt="First slide"></div>';
-							}
-							$(".carousel-inner").html(htmlText);
-							$("#nextUser").attr("data-slide","next");
-		                }else{
-		                	alert(data.msg);
-		                }
-		            },
-		            error:function(){
-		            	status = false;
-		            }
-		        });
-			});
-			
-			/* /filter/json/heartbeatNext
-			<div name="carouselList" class="item" id="carouselList0"><img src="/img/defaultHeadImg.jpg" alt="First slide"></div>
-			
-			*/
-		})
-	</script>
-	</body>
+		<a id="nextUser" class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+			<span id="spanGlyRight" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
+	
+<ul class="pagination" style="margin-bottom: 0px;margin-top: 0px;position: relative;top: -77px;">
+    <li class="disabled"><a id="displayPageNum" href="#" th:text="'当前第'+${pageNum}+'组'">1</a></li>
+    <li class="disabled"><a id="displayTotalCount" href="#" th:text="'总共拥有'+${totalCount}+'位嘉宾'">2</a></li>
+    <li class="disabled"><a href="#">每页显示</a></li>
+    <li id="pageSizeLi5" name="pageSizeLi" th:class="${pageSize=='5'}? 'active' : ''"><a onclick="changePageSize(5);" href="#">5</a></li>
+    <li id="pageSizeLi10" name="pageSizeLi" th:class="${pageSize=='10'}? 'active' : ''"><a onclick="changePageSize(10);" href="#">10</a></li>
+    <li id="pageSizeLi15" name="pageSizeLi" th:class="${pageSize=='15'}? 'active' : ''"><a onclick="changePageSize(15);" href="#">15</a></li>
+    <li id="pageSizeLi20" name="pageSizeLi" th:class="${pageSize=='20'}? 'active' : ''"><a onclick="changePageSize(20);" href="#">20</a></li>
+    <li id="pageSizeLi25" name="pageSizeLi" th:class="${pageSize=='25'}? 'active' : ''"><a onclick="changePageSize(25);" href="#">25</a></li>
+    <li class="disabled"><a href="#">位</a></li>
+</ul>
+	
+	<input type="hidden" id="pageNum" th:value="${pageNum}" value="">
+	<input type="hidden" id="totalCount" th:value="${totalCount}" value="">
+	<input type="hidden" id="currentPageCount" th:value="${currentPageCount}" value="">
+	<select style="display: none;" id="pageSize" name="pageSize" class="form-control">
+		<option value="5">每页5个</option>
+		<option value="10">每页10个</option>
+		<option value="15">每页15个</option>
+		<option value="20">每页20个</option>
+		<option value="25">每页25个</option>
+	</select>
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="listAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-body">进入下一组</div>
+	            <div class="modal-footer">
+	                <button id="ensureIntoNextBtn" type="button" class="btn btn-primary">再来一波</button>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal -->
+	</div>
+<script th:inline="javascript">
+$(function(){
+	$('#myCarousel').carousel('pause');
+	$("#pageSize").val([[${pageSize}]]);
+	
+	$($("div[name='carouselList']")[0]).addClass("active");
+	
+	$('#nextUser').on('click', function(event) {
+		var currentPageCount = $("#currentPageCount").val();
+		if($("#carouselList"+currentPageCount).attr('class') == 'item active'){
+			$("#nextUser").removeAttr("data-slide");
+			$('#listAlertModal').modal();
+		}
+	});
+	
+	$('#ensureIntoNextBtn').on('click', function(event) {
+		var pageNum = $("#pageNum").val();
+		var pageSize = $("#pageSize").val();
+		$('#listAlertModal').modal('hide');
+		$.ajax({
+            url: '/filter/json/heartbeatNext',
+            type: 'get',
+            dataType: 'json',
+            async: false,
+            data: {
+            	pageNum:parseInt(pageNum)+parseInt(1),
+            	pageSize:pageSize
+            	},
+            success:function(data){
+                if (data.code == '0') {
+                	$("#pageNum").val(data.pageNum);
+                	$("#pageSize").val(data.pageSize);
+                	$("#totalCount").val(data.totalCount);
+        			$("#currentPageCount").val(data.currentPageCount);
+					$("#displayPageNum").html("当前第"+data.pageNum+"组");
+					$("#displayTotalCount").html("总共拥有"+data.totalCount+"位嘉宾");
+					$(".carousel-inner").html('');
+					var htmlText = '';
+					for(i = 0; i < data.msg.length; i++) {
+						htmlText += '<div name="carouselList" class="item';
+						if(i==0){
+							htmlText +=" active";
+						}
+						htmlText += '" id="carouselList'+i
+						+'"><img src="'+data.msg[i].headImg+'" alt="First slide">'+'<p class="nickname" style="height: 0px;">'+data.msg[i].nickname+'</p></div>';
+					}
+					$(".carousel-inner").html(htmlText);
+					$("#nextUser").attr("data-slide","next");
+                }else{
+                	alert(data.msg);
+                }
+            },
+            error:function(){
+            	status = false;
+            }
+        });
+	});
+	
+	$("select#pageSize").change(function(){
+        var options=$(this).children("option:selected"); //也可以获取到选中的option
+        var pageNum = $("#pageNum").val();
+		var pageSize = options.val();
+		$.ajax({
+           url: '/filter/json/heartbeatNext',
+           type: 'get',
+           dataType: 'json',
+           async: false,
+           data: {
+           	pageNum:pageNum,
+           	pageSize:pageSize
+           },
+           success:function(data){
+               if (data.code == '0') {
+					$("#pageNum").val(data.pageNum);
+					$("#pageSize").val(data.pageSize);
+					$("#totalCount").val(data.totalCount);
+					$("#currentPageCount").val(data.currentPageCount);
+					$("#displayPageNum").html("当前第"+data.pageNum+"组");
+					$("#displayTotalCount").html("总共拥有"+data.totalCount+"位嘉宾");
+					$(".carousel-inner").html('');
+					var htmlText = '';
+					for(i = 0; i < data.msg.length; i++) {
+						htmlText += '<div name="carouselList" class="item';
+						if(i==0){
+							htmlText +=" active";
+						}
+						htmlText += '" id="carouselList'+i
+						+'"><img src="'+data.msg[i].headImg+'" alt="First slide">'+'<p class="nickname" style="height: 0px;">'+data.msg[i].nickname+'</p></div>';
+					}
+					$(".carousel-inner").html(htmlText);
+               }else{
+					alert(data.msg);
+               }
+           },
+           error:function(){
+           		status = false;
+           }
+       });
+   });
+	
+})
+function changePageSize(pageSize){
+		$("li[name='pageSizeLi']").each(function(){
+			$(this).removeAttr("class");
+		});
+	    var pageNum = $("#pageNum").val();
+		$.ajax({
+        url: '/filter/json/heartbeatNext',
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        data: {
+        	pageNum:pageNum,
+        	pageSize:pageSize
+        },
+        success:function(data){
+            if (data.code == '0') {
+					$("#pageNum").val(data.pageNum);
+					$("#pageSize").val(data.pageSize);
+					$("#totalCount").val(data.totalCount);
+					$("#currentPageCount").val(data.currentPageCount);
+					$("#displayPageNum").html("当前第"+data.pageNum+"组");
+					$("#displayTotalCount").html("总共拥有"+data.totalCount+"位嘉宾");
+					$(".carousel-inner").html('');
+					var htmlText = '';
+					for(i = 0; i < data.msg.length; i++) {
+						htmlText += '<div name="carouselList" class="item';
+						if(i==0){
+							htmlText +=" active";
+						}
+						htmlText += '" id="carouselList'+i
+						+'"><img src="'+data.msg[i].headImg+'" alt="First slide">'+'<p class="nickname" style="height: 0px;">'+data.msg[i].nickname+'</p></div>';
+					}
+					$(".carousel-inner").html(htmlText);
+					$("#pageSizeLi"+pageSize).addClass("active");
+            }else{
+				alert(data.msg);
+            }
+        },
+        error:function(){
+        	status = false;
+        }
+    });
+}
+</script>
+</body>
 </html>

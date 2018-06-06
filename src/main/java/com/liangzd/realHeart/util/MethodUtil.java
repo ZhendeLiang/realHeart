@@ -193,6 +193,8 @@ public class MethodUtil {
 	
 	
 	public static void main(String[] args) throws IOException {
+//		System.out.println(readFileToString("classpath:bodyTab.js"));
+//		System.out.println(readFileToString("classpath:EmailResetPasswordTemplate.html"));
 	}
 	
 	/**

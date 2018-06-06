@@ -1,5 +1,6 @@
 package com.liangzd.realHeart.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.VO.UserImgVo;
@@ -25,8 +27,9 @@ import com.liangzd.realHeart.service.AddressService;
 import com.liangzd.realHeart.service.UserImgService;
 import com.liangzd.realHeart.service.UserService;
 import com.liangzd.realHeart.util.ConstantParams;
+import com.liangzd.realHeart.util.MethodUtil;
 
-//@RequestMapping(value="")
+@RequestMapping(value="/filter")
 @Controller
 public class ForwardingAction {
 	@Autowired
@@ -62,7 +65,7 @@ public class ForwardingAction {
 		this.addressService = addressService;
 	}
 
-	@RequestMapping(value = "/filter/welcome",method = RequestMethod.GET)
+	@RequestMapping(value = "/welcome",method = RequestMethod.GET)
     public String welcome(HttpServletRequest request, Model model) {
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 		String identityInfo = (String) request.getSession().getAttribute("username");
@@ -85,7 +88,7 @@ public class ForwardingAction {
 		return "welcome";
     }
 	
-	@RequestMapping(value = "/filter/uploadImage",method = RequestMethod.GET)
+	@RequestMapping(value = "/uploadImage",method = RequestMethod.GET)
     public String uploadImage(HttpServletRequest request, Model model) {
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 		String type = request.getParameter("type");
@@ -134,7 +137,7 @@ public class ForwardingAction {
         return "uploadHeadImg";
     }
 	
-	@RequestMapping(value = "/filter/heartbeat",method = RequestMethod.GET)
+	@RequestMapping(value = "/heartbeat",method = RequestMethod.GET)
     public String heartbeat(HttpServletRequest request, Model model) {
 		Integer pageNum = StringUtils.isEmpty(request.getParameter("pageNum")) ?
 				1 : Integer.parseInt(request.getParameter("pageNum"));
@@ -164,7 +167,7 @@ public class ForwardingAction {
         return "heartbeat";
     }
 	
-	@RequestMapping(value = "/filter/friendsAndChat",method = RequestMethod.GET)
+	@RequestMapping(value = "/friendsAndChat",method = RequestMethod.GET)
     public String friendsAndChat() {
         return "friendsAndChat";
     }
@@ -172,5 +175,17 @@ public class ForwardingAction {
 	@RequestMapping(value = "/adminWelcome",method = RequestMethod.GET)
     public String adminWelcome() {
         return "adminWelcome";
+    }
+	
+	@ResponseBody
+	@RequestMapping(value = "/js/bodyTab.js",method = RequestMethod.GET)
+    public String queryJs1() {
+		String result = "";
+		try {
+			result = MethodUtil.readFileToString("classpath:bodyTab.js");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return result;
     }
 }

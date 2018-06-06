@@ -10,10 +10,10 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="icon" href="favicon.ico">
-	<link rel="stylesheet" href="layui/css/layui.css" media="all" />
-	<link rel="stylesheet" href="../../css/font_eolqem241z66flxr.css" media="all" />
-	<link rel="stylesheet" href="css/main.css" media="all" />
+	<link rel="icon" href="/img/favicon.ico">
+	<link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="/css/font_eolqem241z66flxr.css" media="all" />
+	<link rel="stylesheet" href="/css/main.css" media="all" />
 </head>
 <body class="main_body">
 	<div class="layui-layout layui-layout-admin">
@@ -84,7 +84,7 @@
 					</li>
 					<li class="layui-nav-item" pc>
 						<a href="javascript:;">
-							<img src="upload/Avatar/face.jpg" class="layui-circle" width="35" height="35">
+							<img src="/upload/Avatar/face.jpg" class="layui-circle" width="35" height="35">
 							<cite th:text="${session.username}">管理员</cite>
 						</a>
 						<dl class="layui-nav-child">
@@ -99,7 +99,7 @@
 		<!-- 左侧导航 -->
 		<div class="layui-side layui-bg-black">
 			<div class="user-photo">
-				<a class="img" title="我的头像" ><img src="upload/Avatar/face.jpg"></a>
+				<a class="img" title="我的头像" ><img src="/upload/Avatar/face.jpg"></a>
 				<p>你好！<span class="userName" th:text="${session.username}+', 欢迎登录'">管理员</span></p>
 			</div>
 			<div class="navBar layui-side-scroll"></div>
@@ -112,7 +112,7 @@
 				</ul>
 				<div class="layui-tab-content clildFrame">
 					<div class="layui-tab-item layui-show">
-						<iframe src="page/main.html"></iframe>
+						<iframe src="/page/main.html"></iframe>
 					</div>
 				</div>
 			</div>
@@ -125,7 +125,7 @@
 
 	<!-- 锁屏 -->
 	<div class="admin-header-lock" id="lock-box" style="display: none;">
-		<div class="admin-header-lock-img"><img src="upload/Avatar/face.jpg"/></div>
+		<div class="admin-header-lock-img"><img src="/upload/Avatar/face.jpg"/></div>
 		<div class="admin-header-lock-name" id="lockUserName" th:text="${session.username}">管理员</div>
 		<div class="input_btn">
 			<input type="password" class="admin-header-lock-input layui-input" placeholder="请输入密码解锁.." name="lockPwd" id="lockPwd" />
@@ -137,9 +137,9 @@
 	<div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
 	<div class="site-mobile-shade"></div>
 
-	<script type="text/javascript" src="layui/layui.js"></script>
-	<script type="text/javascript" src="js/nav.js"></script>
-	<script type="text/javascript" src="js/leftNav.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="/layui/layui.js"></script>
+	<script type="text/javascript" src="/js/nav.js"></script>
+	<script type="text/javascript" src="/js/leftNav.js"></script>
+	<script type="text/javascript" src="/js/index.js"></script>
 </body>
 </html>
