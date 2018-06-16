@@ -18,6 +18,12 @@
 		<link href="/welcome/css/css.css" rel="stylesheet">
 
 		<script src="/welcome/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+		<style>
+			.opacityAndFontWhire{
+				background: rgba(0, 0, 0, 0.5);
+				color: white;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -76,6 +82,7 @@
 						<div class="col-md-9">
 							<h2 th:text="${userInfo.username}">用户名</h2>
 							<h4 th:text="${userInfo.nickname}">昵称</h4>
+							<h4 th:text="${userInfo.viprankName}">会员等级名称</h4>
 							<p th:text="${userInfo.selfIntroduction}">个人简介<em>为空哦</em></p>
 							<div class="main-btn">
 								<a data-toggle="modal" data-target="#editAccountInformation">完善帐号信息</a>
@@ -144,6 +151,8 @@
 			<div class="slide" id="3">
 				<div class="content third-content">
 					<div class="container-fluid">
+						<iframe id="iframeUserList" name="mainFrame" scrolling="no" src="userFriendsList"
+            				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
 					</div>
 				</div>
 			</div>
@@ -210,7 +219,7 @@
 		<!--完善个人信息模态框（Modal）-->
 		<div class="modal fade" id="editAccountInformation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width:700px;">
-				<div class="modal-content">
+				<div class="modal-content opacityAndFontWhire">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
@@ -224,35 +233,35 @@
 							<div class="form-group">
 								<label for="updateUsername" class="col-sm-2 control-label">用户名</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateUsername" 
-										   placeholder="请输入用户名" th:value="${userInfo.username}" readonly="readonly">
+									<input type="text" class="form-control opacityAndFontWhire" id="updateUsername"
+										placeholder="请输入用户名" th:value="${userInfo.username}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateNickname" class="col-sm-2 control-label">昵称</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateNickname" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateNickname" 
 										   placeholder="请输入昵称" th:value="${userInfo.nickname}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updatePhoneNumber" class="col-sm-2 control-label">手机号</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updatePhoneNumber" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updatePhoneNumber" 
 										   placeholder="请输入手机号" th:value="${userInfo.phoneNumber}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateEmail" class="col-sm-2 control-label">邮箱</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateEmail" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateEmail" 
 										   placeholder="请输入邮箱" th:value="${userInfo.email}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateIdCard" class="col-sm-2 control-label">身份证</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateIdCard" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateIdCard" 
 										   placeholder="请输入身份证" th:value="${userInfo.idCard}">
 								</div>
 							</div>
@@ -260,7 +269,7 @@
 							<div class="form-group">
 								<label for="gender" class="col-sm-2 control-label">身份证</label>
 								<div class="col-sm-10">
-									<select id="updateGender" class="form-control">
+									<select id="updateGender" class="form-control opacityAndFontWhire">
 										<option value="1" th:selected="${userInfo.gender=='1'}">男</option>
         								<option value="0" th:selected="${userInfo.gender=='0'}">女</option>
 									</select>
@@ -270,16 +279,16 @@
 							<div class="form-group">
 								<label for="gender" class="col-sm-2 control-label">个人简介</label>
 								<div class="col-sm-10">
-									<textarea id="updateSelfIntroduction" class="form-control" rows="3" th:text="${userInfo.selfIntroduction}">
+									<textarea id="updateSelfIntroduction" class="form-control opacityAndFontWhire" rows="3" th:text="${userInfo.selfIntroduction}">
 									</textarea>
 								</div>
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button id="closeUpdateUser" type="button" class="btn btn-default" data-dismiss="modal">关闭
+						<button id="closeUpdateUser" type="button" class="btn btn-default opacityAndFontWhire" data-dismiss="modal">关闭
 						</button>
-						<button id="submitUpdateUser" type="button" class="btn btn-primary">
+						<button id="submitUpdateUser" type="button" class="btn btn-primary opacityAndFontWhire">
 							提交更改
 						</button>
 					</div>
@@ -290,7 +299,7 @@
 		<!--修改头像/背景 模态框（Modal）-->
 		<div class="modal fade" id="changeHeadImgAndBackground" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width:800px;">
-				<div class="modal-content">
+				<div class="modal-content opacityAndFontWhire">
 					<div class="modal-header">
 						<button id="closeUploadImgModalLabel" type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;

@@ -312,7 +312,11 @@ public class UserServiceImpl implements UserService{
 	public Page<User> findByGenderAndState(String gender, Byte state, Integer pageNum, Integer pageSize, List<Integer> uids) {
 		Sort sort = new Sort(Sort.Direction.ASC,"uid"); //创建时间降序排序
 		Pageable pageable = PageRequest.of(pageNum,pageSize,sort);
-		return userDao.findByGenderAndStateNotInUids(gender, state, uids, pageable);
+		if(uids.size() == 0) {
+			return userDao.findByGenderAndState(gender, state, pageable);
+		}else {
+			return userDao.findByGenderAndStateNotInUids(gender, state, uids, pageable);
+		}
 	}
 
 	@Override
@@ -321,5 +325,10 @@ public class UserServiceImpl implements UserService{
 		Optional<TrUserViprank> hasUserViprank = trUserViprankDao.findByUserId(id);
 		trUserViprank = hasUserViprank.isPresent() ? hasUserViprank.get() : null; 
 		return trUserViprank;
+	}
+
+	@Override
+	public List<User> findAllUsersByUid(List<Integer> uids) {
+		return userDao.findAllById(uids);
 	}
 }

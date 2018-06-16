@@ -1,14 +1,12 @@
 package com.liangzd.realHeart.action;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -34,7 +32,7 @@ import com.liangzd.realHeart.util.MethodUtil;
 @RequestMapping(value = "/filter/json")
 @Controller
 public class UserManageAction {
-	private ResponseJson responseJson = new ResponseJson();;
+	private ResponseJson responseJson = new ResponseJson();
 
 	@Autowired
 	private UserService userService;
@@ -68,8 +66,6 @@ public class UserManageAction {
 	public void setUserRelationService(UserRelationService userRelationService) {
 		this.userRelationService = userRelationService;
 	}
-
-	private static final transient Logger log = LoggerFactory.getLogger(UserManageAction.class);
 
 	/**
 	 * 
@@ -139,7 +135,7 @@ public class UserManageAction {
 	@ResponseBody
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ResponseJson addUser(User user) {
-		user.setCreateTime(new Date(System.currentTimeMillis()));
+		user.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		user.setPassword(StringUtils.isEmpty(user.getPassword()) ? "202cb962ac59075b964b07152d234b70"
 				: MethodUtil.encrypt("MD5", user.getPassword(), null, 1));
 		userService.addUser(user);
@@ -365,6 +361,14 @@ public class UserManageAction {
 		return responseJson;
 	}
 	
+	/**
+	 * 
+	 * @Description: 分页显示当前用户的心动对象
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:24:46
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/heartbeatNext",method = RequestMethod.GET)
     public ResponseJson heartbeatNext(HttpServletRequest request) {
@@ -387,7 +391,6 @@ public class UserManageAction {
 			userImg.setHeadImg((userImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
 				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + userImgs.get(0).getImgUUID()));
 			userAndimgLists.add(userImg);
-			System.out.println(user.getUid());
 		}
 		if(userAndimgLists.size() > 0) {
 			responseJson.setCode(0);
@@ -406,7 +409,7 @@ public class UserManageAction {
 
 	/**
 	 * 
-	 * @Description:处理用户关系
+	 * @Description:处理当前用户与目标好友的关系,0为喜欢,1为不喜欢,2为未确认关系
 	 * @param 
 	 * @return ResponseJson
 	 * @author liangzd
@@ -427,7 +430,7 @@ public class UserManageAction {
 				userRelationService.saveUserRelation(tbUserRelation);
 				responseJson.setCode(0);
 				responseJson.setMsg("0".equals(relation) ? 
-						"如果对方喜欢你的话,就会出现在你的好友列表里面哦" : "莫生气，再来一个看看");
+						"如果对方喜欢你的话,就会出现在你的好友列表里面哦" : "next one~ next one~");
 			}else {
 				responseJson.setCode(2);
 				responseJson.setMsg("当前登陆用户异常");
@@ -438,4 +441,61 @@ public class UserManageAction {
 		}
 		return responseJson;
 	}
+
+	/**
+	 * 
+	 * @Description: 显示当前用户的好友列表
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:25:58
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/userFriendsListJson",method = RequestMethod.GET)
+    public ResponseJson userFriendsListJson(HttpServletRequest request) {
+		String searchKey = request.getParameter("searchKey");
+		String identityInfo = (String) request.getSession().getAttribute("username");
+		User user = userService.queryByIdentityInfo(identityInfo);
+		List<Integer> uids = userRelationService.findUserByUidAndAndRelations(user.getUid(),
+				ConstantParams.USER_RELATION_LIKE, ConstantParams.USER_RELATION_LIKE);
+		List<User> friendsList = userService.findAllUsersByUid(uids);
+		List<User> filterFriendsInfoList = new ArrayList<User>();
+		for(User friends : friendsList) {
+			User friend = new User();
+			if(!StringUtils.isEmpty(friends.getNickname()) && friends.getNickname().contains(searchKey)) {
+				friend.setUid(friends.getUid());
+				friend.setNickname(friends.getNickname());
+				List<TbUserImg> friendsHeadImgs = userImgService.findByUidAndImgType(friends.getUid(), ConstantParams.HEADIMG);
+				friend.setHeadImgPath((friendsHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+					ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + friendsHeadImgs.get(0).getImgUUID()));
+				filterFriendsInfoList.add(friend);
+			}
+		}
+		if(filterFriendsInfoList.size() == 0) {
+			responseJson.setCode(1);
+			responseJson.setMsg("无对应用户");
+		}else{
+			responseJson.setCode(0);
+			responseJson.setMsg(filterFriendsInfoList);
+		}
+        return responseJson;
+    }
+	
+	/**
+	 * 
+	 * @Description: 查找当前用户的聊天记录
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:26:25
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryUserChatRecord",method = RequestMethod.GET)
+    public ResponseJson queryUserChatRecord(HttpServletRequest request) {
+		/*String uid = request.getParameter("uid");
+		String identityInfo = (String) request.getSession().getAttribute("username");
+		User user = userService.queryByIdentityInfo(identityInfo);*/
+		//查找聊天记录
+        return responseJson;
+    }
 }

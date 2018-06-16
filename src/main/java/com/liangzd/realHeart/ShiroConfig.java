@@ -54,12 +54,28 @@ public class ShiroConfig {
 		return shiroFilterFactoryBean;
 	}
 
+	/**
+	 * 
+	 * @Description: 配置用户ShiroRealm 用户匹配tb_user表
+	 * @param 
+	 * @return UserShiroRealm
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:19:08
+	 */
 	@Bean
 	public UserShiroRealm userShiroRealm(){
 		UserShiroRealm userShiroRealm = new UserShiroRealm();
 		return userShiroRealm;
 	}
 	
+	/**
+	 * 
+	 * @Description: 密码匹配过程 配置使用MD5加密，加密次数1024次
+	 * @param 
+	 * @return HashedCredentialsMatcher
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:19:51
+	 */
 	@Bean
 	public HashedCredentialsMatcher hashedCredentialsMatcher() {
 		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
@@ -68,6 +84,14 @@ public class ShiroConfig {
 		return hashedCredentialsMatcher;
 	}
 	
+	/**
+	 * 
+	 * @Description: 配置管理员ShiroRealm 用户匹配tb_admin_user表
+	 * @param 
+	 * @return AdminShiroRealm
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:20:48
+	 */
 	@Bean
 	public AdminShiroRealm adminShiroRealm(){
 		AdminShiroRealm adminShiroRealm = new AdminShiroRealm();
@@ -75,6 +99,14 @@ public class ShiroConfig {
 		return adminShiroRealm;
 	}
 
+	/**
+	 * 
+	 * @Description: 配置自定义业务继承模块化Realm认证器
+	 * @param 
+	 * @return CustomizedModularRealmAuthenticator
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:22:08
+	 */
 	@Bean
 	public CustomizedModularRealmAuthenticator customizedModularRealmAuthenticator() {
 		CustomizedModularRealmAuthenticator customizedModularRealmAuthenticator = new CustomizedModularRealmAuthenticator();
@@ -82,12 +114,28 @@ public class ShiroConfig {
 		return customizedModularRealmAuthenticator;
 	}
 
+	/**
+	 * 
+	 * @Description: 配置Realm认证方式:如果一个（或更多）Realm 验证成功，则整体的尝试被认为是成功的。如果没有一个验证成功，则整体尝试失败
+	 * @param 
+	 * @return AtLeastOneSuccessfulStrategy
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:24:33
+	 */
 	@Bean
 	public AtLeastOneSuccessfulStrategy atLeastOneSuccessfulStrategy() {
 		AtLeastOneSuccessfulStrategy atLeastOneSuccessfulStrategy = new AtLeastOneSuccessfulStrategy();
 		return atLeastOneSuccessfulStrategy;
 	}
 	
+	/**
+	 * 
+	 * @Description: 将自定义业务继承模块化Realm认证器、用户Realm、管理员Realm配置进安全管理器
+	 * @param 
+	 * @return SecurityManager
+	 * @author liangzd
+	 * @date 2018年6月16日 下午7:25:37
+	 */
 	@Bean
 	public SecurityManager securityManager(){
 		DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();

@@ -23,7 +23,7 @@
 			position: absolute;
 			z-index: 999;
 			left:30%;
-			top:40%;
+			top:60%;
 			opacity: 0.8;
 		}
 		#dislikeButton{
@@ -32,10 +32,10 @@
 	</style>
 </head>
 
-<body>
+<body style="background: rgba(0, 0, 0, 0);">
 	<div id="selectButton">
 		<button lang="0" id="likeButton" type="button" class="btn btn-default btn-lg" style="font-size: 36px; background: rgba(252, 176, 158, 0.5);">喜欢</button>
-		<button lang="1" id="dislikeButton" type="button" class="btn btn-default btn-lg" style="font-size: 36px; background: rgba(255, 255, 255, 0.5);">不喜欢</button>
+		<button lang="1" id="dislikeButton" type="button" class="btn btn-default btn-lg" style="font-size: 36px; background: rgba(255, 255, 255, 0.5);">下一张</button>
 	</div>
 	<!-- 第一页 轮播图-->
 	<div id="myCarousel" class="carousel slide" data-wrap="false">
@@ -91,7 +91,7 @@
 	    <div class="modal-dialog">
 	        <div class="modal-content">
 	            <div class="modal-body">
-	            	<iframe id="iframeHeartbeat" name="mainFrame" scrolling="no" 
+	            	<iframe id="iframePersonalDetails" name="mainFrame" scrolling="no" 
             				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
 	            </div>
 	        </div><!-- /.modal-content -->
@@ -100,9 +100,7 @@
 <script th:inline="javascript">
 function showPersonalDetails(){
 	var targetUid = $("div[name=carouselList].active").attr("lang");
-	/* document.getElementById('personalDetailsModal').src="personalDetails?uid="+targetUid; */
-	/* document.getElementById('personalDetailsModal').contentWindow.location.reload(true); */
-	$("#iframeHeartbeat").attr("src","personalDetails?uid="+targetUid); 
+	$("#iframePersonalDetails").attr("src","personalDetails?uid="+targetUid); 
 	$('#personalDetailsModal').modal();
 }
 

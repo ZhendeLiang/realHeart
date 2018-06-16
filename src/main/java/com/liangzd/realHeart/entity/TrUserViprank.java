@@ -2,39 +2,36 @@ package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.ForeignKey;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import javax.persistence.JoinColumn;
-
+/**
+ * 
+ * @Description: tr_user_viprank表的持久化类,用户-会员详细信息关系表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:30:16
+ */
 @Entity(name="tr_user_viprank")
 public class TrUserViprank implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Integer id;//主键
 	@Column(unique = true,length = 11)
-	private Integer userId;
+	private Integer userId;//用户uid,长度11
 	@Column(length = 11)
-	private Integer viprankId;
+	private Integer viprankId;//会员详细信息id,长度11
 	@Column(columnDefinition="timestamp")
 	@JSONField(format="yyyy-MM-dd")
-	private Date openTime;//创建日期
+	private Date openTime;//创建日期,格式化JSON数据日期类型
 	@Column(length = 5)
-	private Integer surplusDay;
+	private Integer surplusDay;//剩余天数,长度5
 	
 	public Integer getId() {
 		return id;

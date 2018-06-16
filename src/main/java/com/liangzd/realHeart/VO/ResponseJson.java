@@ -8,6 +8,7 @@ public class ResponseJson {
 	private String pageSize;
 	private String totalCount;
 	private String currentPageCount;
+	private String token;
 
 	public Integer getCode() {
 		return code;
@@ -50,5 +51,11 @@ public class ResponseJson {
 	}
 	public void setCurrentPageCount(String currentPageCount) {
 		this.currentPageCount = currentPageCount;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

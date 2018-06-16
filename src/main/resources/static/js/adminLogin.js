@@ -1,6 +1,6 @@
 $(function(){
 	$("#adminSubmit").click(function(){
-		debugger;
+		;
 		var adminUsername =$("#adminUsername").val();
 		var adminPassword =$("#adminPassword").val();
 		if (adminUsername == null || adminUsername == undefined || adminUsername == '' || adminUsername == '用户名') { 
@@ -18,7 +18,7 @@ $(function(){
 					async: true,
 					data: {adminUsername:adminUsername,adminPassword:adminPassword},
 					success:function(data){
-						debugger;
+						;
 						if (data.code == '0') {
 							window.location.href = data.msg.url;
 						} else if(data.code == '1') {

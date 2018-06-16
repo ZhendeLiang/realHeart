@@ -125,7 +125,7 @@ $(function(){
 			$('.num2-err').text('手机号不合法，请重新输入');
 			return false;
 		}
-		debugger;
+		;
 		$.ajax({
             url: '/checkPhone',
             type: 'post',
@@ -166,7 +166,7 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
-				debugger;
+				;
 				// var type = 'phone';
 				// 用户名				
 				var inp = $.trim($('#num').val());
@@ -191,7 +191,7 @@ $(function(){
 			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
-			                	debugger;
+			                	;
 			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
 			                    globalTip(data.msg);
 			                } else if(data.code == '2') {
@@ -205,7 +205,7 @@ $(function(){
 			                    		$(this).attr('src', '/verifyCode?'+Math.random());
 			                    	});*/
 			                    	$('.code').find('img').attr('src','/verifyCode?type=login&'+Math.random()).click(function(event) {
-			                    		debugger;
+			                    		;
 			                    		$(this).attr('src', '/verifyCode?type=login&'+Math.random());
 			                    	});
 			                    }
@@ -239,7 +239,7 @@ $(function(){
 			});
 		} else {
 			$(".log-btn").click(function(){
-				debugger;
+				;
 				// var type = 'phone';
 				var phone = $.trim($('#num2').val());
 				var pcode = $.trim($('#veri-code').val());

@@ -122,7 +122,7 @@ $(function(){
 
  	// 下一步点击事件
  	$('.next').click(function(event) {
- 		debugger;
+ 		;
  		var inp = $("#pc_tel").val();
  		var phone = '';
  		var email = '';
@@ -143,7 +143,7 @@ $(function(){
 		            async: true,
 		            data: {phone:phone,email:email,veriCode:code,type:dtype,veri:veri},
 		            success:function(data){
-		            	debugger;
+		            	;
 		                if (data.code == '0') {
 		                	$('.pc_tel-err').removeClass('hide');
 		                	$('.pc_tel-err').find("i").attr('class', 'icon-ok').css("color","#84d54b");
@@ -196,6 +196,7 @@ $(function(){
 	    var oTip2 = $('.reset-err2');
 	    var uid = $('#uid').val();
 	    var verifyUUID = $('#verifyUUID').val();
+	    var type = $('#type').val();
 	    if (oReset == "") {
 	    	oTip.removeClass('hide');
 	    	oTip.find('em').text("请输入密码！");
@@ -241,7 +242,7 @@ $(function(){
             type: 'post',
             dataType: 'json',
             async: true,
-            data: {passport:oReset,passport2:oReset_sure,uid:uid,verifyUUID:verifyUUID},
+            data: {passport:oReset,passport2:oReset_sure,uid:uid,verifyUUID:verifyUUID,type:type},
             success:function(data){
                 if (data.code == '0') {
                 	globalTip(data.msg);

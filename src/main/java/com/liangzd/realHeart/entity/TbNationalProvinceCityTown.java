@@ -1,28 +1,28 @@
 package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
 
+/**
+ * 
+ * @Description: tb_national_province_city_town表的持久化对象,省市区表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:13:49
+ */
 @Entity(name="tb_national_province_city_town")
 public class TbNationalProvinceCityTown implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@Column(unique = true,length=6)
-	private String code;
+	private String code;//主键,唯一值,长度6
 	@Column(length=15)
-	private String name;
+	private String name;//省/市/区的名字
 	@Column(length=6)
-	private String parentCode;
+	private String parentCode;//省/市/区的父级主键,省级的父级为0
 	public String getCode() {
 		return code;
 	}

@@ -11,24 +11,23 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.druid.util.StringUtils;
-import com.liangzd.realHeart.dao.AdminUserDao;
 import com.liangzd.realHeart.dao.UserDao;
 import com.liangzd.realHeart.entity.Permission;
 import com.liangzd.realHeart.entity.Role;
 import com.liangzd.realHeart.entity.User;
-import com.liangzd.realHeart.service.LoginService;
 import com.liangzd.realHeart.util.MethodUtil;
-
+/**
+ * 
+ * @Description: 用户的用户登陆验证方法，继承AuthorizingRealm类，并重写身份验证方法和授权方法
+ * @author liangzd
+ * @date 2018年6月16日 下午9:53:38
+ */
 public class UserShiroRealm extends AuthorizingRealm{
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private AdminUserDao adminUserDao;
 	
 	public UserDao getUserDao() {
 		return userDao;

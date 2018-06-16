@@ -19,9 +19,13 @@ import com.liangzd.realHeart.entity.AdminUser;
 import com.liangzd.realHeart.entity.Permission;
 import com.liangzd.realHeart.entity.Role;
 import com.liangzd.realHeart.entity.User;
-import com.liangzd.realHeart.service.LoginService;
-import com.liangzd.realHeart.util.MethodUtil;
 
+/**
+ * 
+ * @Description: 管理员的用户登陆验证方法，继承AuthorizingRealm类，并重写身份验证方法和授权方法
+ * @author liangzd
+ * @date 2018年6月16日 下午9:53:38
+ */
 public class AdminShiroRealm extends AuthorizingRealm{
 	@Autowired
 	private AdminUserDao adminUserDao;

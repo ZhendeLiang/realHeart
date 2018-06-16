@@ -1,6 +1,7 @@
 package com.liangzd.realHeart.action;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import com.liangzd.realHeart.VO.UserVo;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.realm.CustomizedToken;
 import com.liangzd.realHeart.service.UserService;
+import com.liangzd.realHeart.util.ConstantParams;
 import com.liangzd.realHeart.util.LoginType;
 import com.liangzd.realHeart.util.MethodUtil;
 import com.liangzd.verifyCode.image.ImageVerifyCode;
@@ -63,7 +65,6 @@ public class LoginAction {
 	@RequestMapping("/verifyLogin")
 	public ResponseJson login(HttpServletRequest request, UserVo user) {
 		boolean isAdmin = user.getAdminUsername() == null ? false : true;
-		System.out.println("HomeController.login()");
 		Subject currentUser = SecurityUtils.getSubject();
 		responseJson = new ResponseJson();
 		CustomizedToken token = null;
@@ -104,8 +105,6 @@ public class LoginAction {
 				} catch (LockedAccountException lae) {
 					log.info("The account for username " + token.getPrincipal() + " is locked.  "
 							+ "Please contact your administrator to unlock it.");
-				} catch (Exception lae) {
-					System.out.println("错误");
 				}
 			} else {
 				responseJson.setCode(3);
@@ -285,7 +284,7 @@ public class LoginAction {
 				try {
 //					String result = MethodUtil.sendPhoneVerifyCode(user.getPhone());
 					String result = JSONObject.toJSONString(new TestPhone(200, "ceshi", "1118"));
-					System.out.println(result);
+					@SuppressWarnings("unchecked")
 					Map<String,Object> resultMap = (Map<String,Object>)JSON.parse(result);
 					if(resultMap.get("code") instanceof Integer && (Integer)resultMap.get("code") == 200) {
 						responseJson.setCode(0);
@@ -311,6 +310,14 @@ public class LoginAction {
 		return responseJson;
 	}
 
+	/**
+	 * 
+	 * @Description: 判断手机验证码是否正确
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:17:58
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkPhoneVerifyCode", method = RequestMethod.POST)
 	public ResponseJson checkPhoneVerifyCode(HttpServletRequest request, UserVo user) {
@@ -327,6 +334,14 @@ public class LoginAction {
 		return responseJson;
 	}
 
+	/**
+	 * 
+	 * @Description: 手机注册账号,先校验当前手机号是否存在，在保存当前的注册对象
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:18:36
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/registAction", method = RequestMethod.POST)
 	public ResponseJson registAction(HttpServletRequest request, UserVo user) {
@@ -336,7 +351,7 @@ public class LoginAction {
 		User addUser = new User();
 		if(!hasUser.isPresent()) {
 			addUser.setUsername(phone);
-			addUser.setCreateTime(new java.sql.Date(System.currentTimeMillis()));
+			addUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			addUser.setGender("1");
 			addUser.setViprankName("1");
 			addUser.setPhoneNumber(phone);
@@ -370,7 +385,18 @@ public class LoginAction {
 		return responseJson;
 	}
 
-
+	/**
+	 * 
+	 * @Description: 手机/邮箱找回密码,重置密码的校验，
+	 * 1.手机号重置密码
+	 * 		判断当前的手机验证码是否正确，再判断手机号是否存在
+	 * 2.邮箱重置密码
+	 * 		判断此邮箱是否存在，存在的话，給该邮箱发送邮件，在邮箱中点击连接重置密码
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:19:31
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/resetVerify", method = RequestMethod.POST)
 	public ResponseJson resetVerify(HttpServletRequest request, UserVo user) {
@@ -461,15 +487,31 @@ public class LoginAction {
 		return responseJson;
 	}
 
+	/**
+	 * 
+	 * @Description: 根据传过来的verifyUUID，重置当前绑定用户的密码
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:20:27
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
 	public ResponseJson resetPassword(HttpServletRequest request, UserVo user) {
-		Integer uid = user.getUid();
 		String verifyUUID = user.getVerifyUUID();
 		if(!StringUtils.isEmpty(verifyUUID)) {
-			String correctUid = String.valueOf(request.getSession().getAttribute("uid"+verifyUUID));
-			String correctTime = String.valueOf(request.getSession().getAttribute("time"+verifyUUID));
-			String isResetPassword = (String) request.getSession().getAttribute(correctUid+"Flag");
+			String correctUid = "";
+			String correctTime = "";
+			String isResetPassword = "";
+			if("android".equals(user.getType())) {
+				correctUid = String.valueOf(ConstantParams.ANDROID_PARAMS.get("uid"+verifyUUID));
+				correctTime = String.valueOf(ConstantParams.ANDROID_PARAMS.get("time"+verifyUUID));
+				isResetPassword = (String) ConstantParams.ANDROID_PARAMS.get(correctUid+"Flag");
+			}else {
+				correctUid = String.valueOf(request.getSession().getAttribute("uid"+verifyUUID));
+				correctTime = String.valueOf(request.getSession().getAttribute("time"+verifyUUID));
+				isResetPassword = (String) request.getSession().getAttribute(correctUid+"Flag");
+			}
 			if((!StringUtils.isEmpty(correctUid) || !StringUtils.isEmpty(correctTime)) &&
 					(!StringUtils.isEmpty(isResetPassword) && "true".equals(isResetPassword))) {
 				long alreadyPassed = System.currentTimeMillis() - Long.parseLong(correctTime);

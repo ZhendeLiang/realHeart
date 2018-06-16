@@ -1,27 +1,28 @@
 package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
 
+/**
+ * 
+ * @Description: tb_admin_user表的持久化类,管理员用户表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:08:25
+ */
 @Entity(name="tb_admin_user")
 public class AdminUser implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Integer id;//主键
 	@Column(unique = true)
-	private String adminUsername;
-	private String adminPassword;
+	private String adminUsername;//唯一值,管理员的用户名
+	private String adminPassword;//管理员的密码
 	public Integer getId() {
 		return id;
 	}

@@ -6,7 +6,7 @@ var navs = [{
 },{
 	"title" : "用户管理",
 	"icon" : "icon-text",
-	"href" : "page/user/allUsers.html",
+	"href" : "/page/user/allUsers.html",
 	"spread" : false
 }
 //,{

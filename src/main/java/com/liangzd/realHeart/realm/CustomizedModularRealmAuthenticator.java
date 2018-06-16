@@ -9,6 +9,12 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.realm.Realm;
 
+/**
+ * 
+ * @Description: 自定义业务继承模块化Realm认证器,并重写doAuthenticate方法
+ * @author liangzd
+ * @date 2018年6月16日 下午7:22:49
+ */
 public class CustomizedModularRealmAuthenticator extends ModularRealmAuthenticator{
 
 	@Override

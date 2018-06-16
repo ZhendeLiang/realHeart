@@ -17,6 +17,7 @@
         <div class="form-data find_password">
         	<input id="uid" type="hidden" value=""/>
         	<input id="verifyUUID" type="hidden" value=""/>
+        	<input id="type" type="hidden" value=""/>
             <h4>重新设置密码</h4>
             <p class="right_now">已有账号，<a href="/login.html">马上登录</a></p>
             <p class="p-input pc_reset pos">
@@ -52,6 +53,11 @@
 		} */
 		if(searchs[0].split("=")[0] == 'verifyUUID'){
 			$("#verifyUUID").val(searchs[0].split("=")[1]);
+		}
+		if(searchs.length > 1){
+			if(searchs[1].split("=")[0] == 'type'){
+				$("#type").val(searchs[1].split("=")[1]);
+			}
 		}
 	})
 </script>

@@ -13,6 +13,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.dao.UserRelationDao;
 import com.liangzd.realHeart.entity.TbUserRelation;
 import com.liangzd.realHeart.service.UserRelationService;
+import com.liangzd.realHeart.util.ConstantParams;
 
 @Service
 public class UserRelationServiceImpl implements UserRelationService{
@@ -57,8 +58,24 @@ public class UserRelationServiceImpl implements UserRelationService{
 
 	@Override
 	public List<Integer> findByUid(Integer uid) {
-		List<TbUserRelation> firstUidList = userRelationDao.findByFirstUid(uid);
-		List<TbUserRelation> secondUidList = userRelationDao.findBySecondUid(uid);
+		List<TbUserRelation> firstUidList = userRelationDao.findByFirstUidAndFirstUserRelationNot(uid,ConstantParams.USER_RELATION_UNKNOW);
+		List<TbUserRelation> secondUidList = userRelationDao.findBySecondUidAndSecondUserRelationNot(uid,ConstantParams.USER_RELATION_UNKNOW);
+		List<Integer> uids = new ArrayList<Integer>();
+		for(TbUserRelation tbUserRelation : firstUidList) {
+			uids.add(tbUserRelation.getSecondUid());
+		}
+		for(TbUserRelation tbUserRelation : secondUidList) {
+			uids.add(tbUserRelation.getFirstUid());
+		}
+		return uids;
+	}
+
+	@Override
+	public List<Integer> findUserByUidAndAndRelations(Integer uid, String firstRelation, String secondRelation) {
+		List<TbUserRelation> firstUidList = userRelationDao.findByFirstUidAndFirstUserRelationAndSecondUserRelation(uid,
+				firstRelation,secondRelation);
+		List<TbUserRelation> secondUidList = userRelationDao.findBySecondUidAndFirstUserRelationAndSecondUserRelation(uid,
+				firstRelation,secondRelation);
 		List<Integer> uids = new ArrayList<Integer>();
 		for(TbUserRelation tbUserRelation : firstUidList) {
 			uids.add(tbUserRelation.getSecondUid());

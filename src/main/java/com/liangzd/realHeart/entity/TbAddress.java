@@ -1,35 +1,36 @@
 package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
-import javax.persistence.JoinColumn;
 
+/**
+ * 
+ * @Description: tb_address表的持久化对象,详细地址表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:12:26
+ */
 @Entity(name="tb_address")
 public class TbAddress implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Integer id;//主键
 	@Column(length=20)
-	private String province;
+	private String province;//省,长度20
 	@Column(length=20)
-	private String city;
+	private String city;//市,长度20
 	@Column(length=20)
-	private String town;
+	private String town;//区,长度20
 	@Column(length=20)
-	private String details;
+	private String details;//详细地址,长度20
 	@Transient
-	private Integer uid;
+	private Integer uid;//非持久化对象,用户uid
 	public Integer getId() {
 		return id;
 	}

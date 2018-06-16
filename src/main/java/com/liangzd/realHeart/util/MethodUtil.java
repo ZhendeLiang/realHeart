@@ -156,7 +156,7 @@ public class MethodUtil {
 		config.setCodelen(ConstantParams.PHONE_CODE_LEN);
 		config.setNonce(ConstantParams.PHONE_NONCE);
 		config.setServerUrl(ConstantParams.PHONE_SERVER_URL);
-		config.setTemplateid(ConstantParams.PHONE_TEMPLATE_ID);
+		config.setTemplateid(ConstantParams.PHONE_TEMPLATE_ID1);
 		PhoneVerifyCode phoneVerifyCode = new PhoneVerifyCode(config);
 		return phoneVerifyCode.sendMsg(phoneNumber);
 	}
@@ -193,8 +193,6 @@ public class MethodUtil {
 	
 	
 	public static void main(String[] args) throws IOException {
-//		System.out.println(readFileToString("classpath:bodyTab.js"));
-//		System.out.println(readFileToString("classpath:EmailResetPasswordTemplate.html"));
 	}
 	
 	/**

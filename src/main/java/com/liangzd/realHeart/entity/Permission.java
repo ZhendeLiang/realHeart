@@ -11,12 +11,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+/**
+ * 
+ * @Description: tb_permission表的持久化对象,关系的允许表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:09:35
+ */
 @Entity(name="tb_permission")
 public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id@GeneratedValue
-    private Integer id;//主键.
-    private String name;//名称.
+    private Integer id;//主键
+    private String name;//权限名
     @Column(columnDefinition="enum('menu','button')")
     private String resourceType;//资源类型，[menu|button]
     private String url;//资源路径.

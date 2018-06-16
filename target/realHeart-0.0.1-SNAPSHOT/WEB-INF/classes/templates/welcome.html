@@ -18,6 +18,12 @@
 		<link href="/welcome/css/css.css" rel="stylesheet">
 
 		<script src="/welcome/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+		<style>
+			.opacityAndFontWhire{
+				background: rgba(0, 0, 0, 0.5);
+				color: white;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -36,7 +42,7 @@
 
 		</div>
 
-		<nav>
+		<nav id="menuListNav">
 			<div class="logo">
 				<img src="/welcome/img/ui.png" alt="">
 			</div>
@@ -59,6 +65,9 @@
 				<li>
 					<a href="#5"><i class="fa fa-signal"></i> <em>等级提升</em></a>
 				</li>
+				<li>
+					<a onclick="logout()" href="/logout"><i class="fa fa-sign-out"></i> <em>注销</em></a>
+				</li>
 			</ul>
 		</nav>
 
@@ -73,6 +82,7 @@
 						<div class="col-md-9">
 							<h2 th:text="${userInfo.username}">用户名</h2>
 							<h4 th:text="${userInfo.nickname}">昵称</h4>
+							<h4 th:text="${userInfo.viprankName}">会员等级名称</h4>
 							<p th:text="${userInfo.selfIntroduction}">个人简介<em>为空哦</em></p>
 							<div class="main-btn">
 								<a data-toggle="modal" data-target="#editAccountInformation">完善帐号信息</a>
@@ -90,54 +100,48 @@
 						<div class="col-md-6">
 							<div class="left-content">
 								<h2>个人详情</h2>
-								<!-- <p>Please tell your friends about templatemo website. A variety of free CSS templates are available for immediate downloads.</p>
-								<p>Phasellus vitae faucibus orci. Etiam eleifend orci sed faucibus semper. Cras varius dolor et augue fringilla, eu commodo sapien iaculis. Donec eget dictum tellus.
-									<a href="#">Curabitur</a> a interdum diam. Nulla vestibulum porttitor porta.</p>
-								<p>Nulla vitae interdum libero, vel posuere ipsum. Phasellus interdum est et dapibus tempus. Vestibulum malesuada lorem condimentum mauris ornare dapibus. Curabitur tempor ligula et
-									<a href="#">placerat</a> molestie.</p>
-								<p>Aliquam efficitur eu purus in interdum.
-									<a href="#">Etiam tincidunt</a> magna ex, sit amet lobortis felis bibendum id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
 								<div class="main-btn">
-									<a href="#3">Read More</a>
-								</div> -->
-								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">姓名:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.username}"></p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">昵称:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.nickname}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">性别:</a>
 										<p style="display: inline-block; margin-left: 20px;" th:if=" ${userInfo.gender} == '0'">女</p>
 										<p style="display: inline-block; margin-left: 20px;" th:if=" ${userInfo.gender} == '1'">男</p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">邮箱:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.email}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">手机号:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.phoneNumber}"></p>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<a href="#3">身份证:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.idCard}"></p>
 									</div>
 								</div>
 								<div class="main-btn">
-									<a href="#3">创建时间:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.createTime}"></p>
+									<div class="col-md-12">
+										<a href="#3">创建时间:</a><p style="display: inline-block; margin-left: 20px;" th:text="${userInfo.createTime}"></p>
+									</div>
 								</div>
 								<div class="main-btn">
-									<a href="#3">个人简介:</a>
-									<fieldset>
-										<textarea th:text="${userInfo.selfIntroduction}" name="message" rows="6" class="form-control" id="message" placeholder="Your message..." required=""></textarea>
-									</fieldset>
+									<div class="col-md-12">
+										<a href="#3">个人简介:</a>
+										<fieldset>
+											<textarea th:text="${userInfo.selfIntroduction}" name="message" rows="6" class="form-control" id="message" placeholder="Your message..." required=""></textarea>
+										</fieldset>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-2" th:each="img:${userBackgroundImgs}">
+						<div class="col-md-3" th:each="img:${userBackgroundImgs}">
 							<div class="detailsDiv"><a th:href="${img}" target="_blank" href="#"><img class="col-xs-2 col-sm-2 col-md-2" th:src="${img}" src=""/></a></div>
 						</div>
 					</div>
@@ -147,14 +151,16 @@
 			<div class="slide" id="3">
 				<div class="content third-content">
 					<div class="container-fluid">
+						<iframe id="iframeUserList" name="mainFrame" scrolling="no" src="userFriendsList"
+            				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
 					</div>
 				</div>
 			</div>
 			<div class="slide" id="4">
 				<div class="content fourth-content">
 					<div class="container-fluid">
-						<iframe src="heartbeat?pageNum=1&pageSize=10" id="iframepage" frameborder="0" scrolling="yes" 
-							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="680"></iframe>
+						<iframe id="iframeHeartbeat" name="mainFrame" scrolling="no" src="heartbeat?pageNum=1&pageSize=10"
+            				frameborder="0" style="padding: 0px; width: 100%; height: 1000px;"></iframe>
 					</div>
 				</div>
 			</div>
@@ -162,7 +168,6 @@
 				<div class="content fifth-content">
 					<div class="container-fluid">
 						<div class="col-md-6">
-
 						</div>
 						<div class="col-md-6">
 							<form id="contact" action="" method="post">
@@ -214,7 +219,7 @@
 		<!--完善个人信息模态框（Modal）-->
 		<div class="modal fade" id="editAccountInformation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width:700px;">
-				<div class="modal-content">
+				<div class="modal-content opacityAndFontWhire">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
@@ -228,35 +233,35 @@
 							<div class="form-group">
 								<label for="updateUsername" class="col-sm-2 control-label">用户名</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateUsername" 
-										   placeholder="请输入用户名" th:value="${userInfo.username}" readonly="readonly">
+									<input type="text" class="form-control opacityAndFontWhire" id="updateUsername"
+										placeholder="请输入用户名" th:value="${userInfo.username}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateNickname" class="col-sm-2 control-label">昵称</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateNickname" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateNickname" 
 										   placeholder="请输入昵称" th:value="${userInfo.nickname}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updatePhoneNumber" class="col-sm-2 control-label">手机号</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updatePhoneNumber" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updatePhoneNumber" 
 										   placeholder="请输入手机号" th:value="${userInfo.phoneNumber}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateEmail" class="col-sm-2 control-label">邮箱</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateEmail" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateEmail" 
 										   placeholder="请输入邮箱" th:value="${userInfo.email}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="updateIdCard" class="col-sm-2 control-label">身份证</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="updateIdCard" 
+									<input type="text" class="form-control opacityAndFontWhire" id="updateIdCard" 
 										   placeholder="请输入身份证" th:value="${userInfo.idCard}">
 								</div>
 							</div>
@@ -264,7 +269,7 @@
 							<div class="form-group">
 								<label for="gender" class="col-sm-2 control-label">身份证</label>
 								<div class="col-sm-10">
-									<select id="updateGender" class="form-control">
+									<select id="updateGender" class="form-control opacityAndFontWhire">
 										<option value="1" th:selected="${userInfo.gender=='1'}">男</option>
         								<option value="0" th:selected="${userInfo.gender=='0'}">女</option>
 									</select>
@@ -274,16 +279,16 @@
 							<div class="form-group">
 								<label for="gender" class="col-sm-2 control-label">个人简介</label>
 								<div class="col-sm-10">
-									<textarea id="updateSelfIntroduction" class="form-control" rows="3" th:text="${userInfo.selfIntroduction}">
+									<textarea id="updateSelfIntroduction" class="form-control opacityAndFontWhire" rows="3" th:text="${userInfo.selfIntroduction}">
 									</textarea>
 								</div>
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button id="closeUpdateUser" type="button" class="btn btn-default" data-dismiss="modal">关闭
+						<button id="closeUpdateUser" type="button" class="btn btn-default opacityAndFontWhire" data-dismiss="modal">关闭
 						</button>
-						<button id="submitUpdateUser" type="button" class="btn btn-primary">
+						<button id="submitUpdateUser" type="button" class="btn btn-primary opacityAndFontWhire">
 							提交更改
 						</button>
 					</div>
@@ -294,7 +299,7 @@
 		<!--修改头像/背景 模态框（Modal）-->
 		<div class="modal fade" id="changeHeadImgAndBackground" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width:800px;">
-				<div class="modal-content">
+				<div class="modal-content opacityAndFontWhire">
 					<div class="modal-header">
 						<button id="closeUploadImgModalLabel" type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
@@ -304,8 +309,10 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<iframe  th:src="${uploadImageAndParams}" src="uploadImage?type=1" id="iframepage" frameborder="0" scrolling="yes" 
-							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="680"></iframe>
+						<!-- <iframe  th:src="${uploadImageAndParams}" src="uploadImage?type=1" id="iframeUploadImage" frameborder="0" scrolling="yes" 
+							marginheight="0" marginwidth="0" onLoad="iFrameHeight()" width="100%" height="680"></iframe> -->
+						<iframe id="iframeUploadImage" name="mainFrame" scrolling="yes" th:src="${uploadImageAndParams}" src="uploadImage?type=1"
+            				frameborder="0" style="padding: 0px; width: 100%; height: 680px;"></iframe>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
@@ -324,7 +331,72 @@
 		<script src="/welcome/js/main.js"></script>
 
 		<script th:inline="javascript">
+			startInit('iframeHeartbeat', 560);
+			var browserVersion = window.navigator.userAgent.toUpperCase();
+			var isOpera = browserVersion.indexOf("OPERA") > -1 ? true : false;
+			var isFireFox = browserVersion.indexOf("FIREFOX") > -1 ? true : false;
+			var isChrome = browserVersion.indexOf("CHROME") > -1 ? true : false;
+			var isSafari = browserVersion.indexOf("SAFARI") > -1 ? true : false;
+			var isIE = (!!window.ActiveXObject || "ActiveXObject" in window);
+			var isIE9More = (! -[1,] == false);
+			function reinitIframe(iframeId, minHeight) {
+			    try {
+			        var iframe = document.getElementById(iframeId);
+			        var bHeight = 0;
+			        if (isChrome == false && isSafari == false) {
+			            try {
+			                bHeight = iframe.contentWindow.document.body.scrollHeight;
+			            } catch (ex) {                
+			            }
+			        }
+			        var dHeight = 0;
+			        if (isFireFox == true)
+			            dHeight = iframe.contentWindow.document.documentElement.offsetHeight + 2;//如果火狐浏览器高度不断增加删除+2
+			        else if (isIE == false && isOpera == false && iframe.contentWindow) {
+			            try {
+			                dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+			            } catch (ex) {
+			            }
+			        }
+			        else if (isIE == true && isIE9More) {//ie9+
+			            var heightDeviation = bHeight - eval("window.IE9MoreRealHeight" + iframeId);
+			            if (heightDeviation == 0) {
+			                bHeight += 3;
+			            } else if (heightDeviation != 3) {
+			                eval("window.IE9MoreRealHeight" + iframeId + "=" + bHeight);
+			                bHeight += 3;
+			            }
+			        }
+			        else//ie[6-8]、OPERA
+			            bHeight += 3;
+
+			        var height = Math.max(bHeight, dHeight);
+			        if (height < minHeight) height = minHeight;
+			        //alert(iframe.contentWindow.document.body.scrollHeight + "~" + iframe.contentWindow.document.documentElement.scrollHeight);
+			        iframe.style.height = height + "px";
+			    } catch (ex) { }
+			}
+			function startInit(iframeId, minHeight) {
+			    eval("window.IE9MoreRealHeight" + iframeId + "=0");
+			    window.setInterval("reinitIframe('" + iframeId + "'," + minHeight + ")", 100);
+			}
+			
 			$(document).ready(function() {
+				var gender = $("#updateGender").val();
+				if(gender == "0"){
+					$("#menuListNav").css("background","rgba(252, 176, 158, 0.5)");
+					$(".first-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".second-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".third-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".fourth-content").css("background","rgba(252, 176, 158, 0.5)");
+					$(".fifth-content").css("background","rgba(252, 176, 158, 0.5)");
+				}else{
+					$(".logo").html('<img src="/welcome/img/ui2.png" alt="">');
+					$(".mini-logo").html('<img src="/welcome/img/ui2.png" alt="">');
+				}
+				$("#iframeHeartbeat").height(0);
+				$("#iframeHeartbeat").attr("src","heartbeat?pageNum=1&pageSize=10");
+				
 				// navigation click actions 
 				$('.scroll-link').on('click', function(event) {
 					event.preventDefault();
@@ -422,7 +494,9 @@
 					log: function() {}
 				};
 			}
+			function logout(){
+				window.location.href="/logout";
+			}
 		</script>
 	</body>
-
 </html>

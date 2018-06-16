@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -22,16 +20,22 @@ import com.liangzd.realHeart.VO.UserImgVo;
 import com.liangzd.realHeart.entity.TbAddress;
 import com.liangzd.realHeart.entity.TbNationalProvinceCityTown;
 import com.liangzd.realHeart.entity.TbUserImg;
-import com.liangzd.realHeart.entity.TbUserRelation;
 import com.liangzd.realHeart.entity.TrUserViprank;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.AddressService;
 import com.liangzd.realHeart.service.UserImgService;
 import com.liangzd.realHeart.service.UserRelationService;
 import com.liangzd.realHeart.service.UserService;
+import com.liangzd.realHeart.service.ViprankService;
 import com.liangzd.realHeart.util.ConstantParams;
 import com.liangzd.realHeart.util.MethodUtil;
 
+/**
+ * 
+ * @Description: 用于需要校验用户身份的页面跳转
+ * @author liangzd
+ * @date 2018年6月16日 下午8:05:40
+ */
 @RequestMapping(value="/filter")
 @Controller
 public class ForwardingAction {
@@ -43,9 +47,9 @@ public class ForwardingAction {
 	private AddressService addressService;
 	@Autowired
 	private UserRelationService userRelationService;
+	@Autowired
+	private ViprankService viprankService;
 	
-    private static final transient Logger log = LoggerFactory.getLogger(ForwardingAction.class);
-
 	public UserService getUserService() {
 		return userService;
 	}
@@ -78,11 +82,29 @@ public class ForwardingAction {
 		this.userRelationService = userRelationService;
 	}
 
+	public ViprankService getViprankService() {
+		return viprankService;
+	}
+
+	public void setViprankService(ViprankService viprankService) {
+		this.viprankService = viprankService;
+	}
+
+	/**
+	 * 
+	 * @Description: 用户登陆成功后-跳转到个人主页,获取个人信息(包括头像与用户设置的背景图片)
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:06:34
+	 */
 	@RequestMapping(value = "/welcome",method = RequestMethod.GET)
     public String welcome(HttpServletRequest request, Model model) {
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 		String identityInfo = (String) request.getSession().getAttribute("username");
 		User user = userService.queryByIdentityInfo(identityInfo);
+		TrUserViprank userViprank = userService.findUserViprankByUserId(user.getUid());
+		user.setViprankName(viprankService.findById(userViprank.getViprankId()).getName());
 		user.setPassword("");
 		List<TbUserImg> userImgs = userImgService.findByUid(user.getUid());
 		List<String> backgroundImgs = new ArrayList<String> ();
@@ -101,26 +123,20 @@ public class ForwardingAction {
 		return "welcome";
     }
 	
+	/**
+	 * 
+	 * @Description: 登陆成功-上传用户头与背景，跳转到用户上传图片的页面
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:07:39
+	 */
 	@RequestMapping(value = "/uploadImage",method = RequestMethod.GET)
     public String uploadImage(HttpServletRequest request, Model model) {
 		String type = request.getParameter("type");
 		String uid = request.getParameter("uid");
 		if(!StringUtils.isEmpty(type) && "1".equals(type)) {
 			List<TbUserImg> userImgs = userImgService.findByUid(Integer.parseInt(uid));
-			/*String backgroundImgs = "";
-			for(TbUserImg userImg : userImgs) {
-				if(!StringUtils.isEmpty(userImg.getImgType())) {
-					if("0".equals(userImg.getImgType())) {
-						model.addAttribute("userHeadImg", ConstantParams.SERVER_HEADIMG_UPLOAD_PATH+userImg.getImgUUID());
-					}else {
-						backgroundImgs += ConstantParams.SERVER_BACKGROUNDIMGS_UPLOAD_PATH+userImg.getImgUUID() +"\",\"";
-					}
-				}
-			}
-			
-			System.out.println(backgroundImgs.substring(0, backgroundImgs.length()-3));
-			model.addAttribute("userBackgroundImgs", backgroundImgs.substring(0, backgroundImgs.length()-3));
-			*/
 			List<String> backgroundImgs = new ArrayList<String> ();
 			Integer increasement = 0;
 			for(TbUserImg userImg : userImgs) {
@@ -149,6 +165,14 @@ public class ForwardingAction {
         return "uploadHeadImg";
     }
 	
+	/**
+	 * 
+	 * @Description: 登陆成功-显示心动列表,查找系统中与该用户尚未确认关系的异性列表
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:08:30
+	 */
 	@RequestMapping(value = "/heartbeat",method = RequestMethod.GET)
     public String heartbeat(HttpServletRequest request, Model model) {
 		Integer pageNum = StringUtils.isEmpty(request.getParameter("pageNum")) ?
@@ -170,7 +194,6 @@ public class ForwardingAction {
 			userImg.setHeadImg((userImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
 				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + userImgs.get(0).getImgUUID()));
 			userAndimgLists.add(userImg);
-			System.out.println(user.getUid());
 		}
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("pageSize", String.valueOf(pageSize));
@@ -180,16 +203,40 @@ public class ForwardingAction {
         return "heartbeat";
     }
 	
-	@RequestMapping(value = "/friendsAndChat",method = RequestMethod.GET)
+	/**
+	 * 
+	 * @Description: 登陆成功-显示当前用户的好友列表与第一个用户的聊天记录
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:09:35
+	 */
+	/*@RequestMapping(value = "/friendsAndChat",method = RequestMethod.GET)
     public String friendsAndChat() {
-        return "friendsAndChat";
-    }
+		return "friendsAndChat";
+    }*/
 
+	/**
+	 * 
+	 * @Description: 管理员登陆成功,用于跳转到管理的登陆界面
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:11:04
+	 */
 	@RequestMapping(value = "/adminWelcome",method = RequestMethod.GET)
     public String adminWelcome() {
         return "adminWelcome";
     }
 	
+	/**
+	 * @TODO 可优化
+	 * @Description: 管理员登陆成功,请求一个相对路径的JS文件,用于转发一个JS文件
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:11:31
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/js/bodyTab.js",method = RequestMethod.GET)
     public String queryJs1() {
@@ -202,6 +249,16 @@ public class ForwardingAction {
         return result;
     }
 
+	/**
+	 * 
+	 * @Description: 用户登陆成功，心动列表中，点击图片显示该用户详情，根据当前账号用户的会员等级进行返回信息的过滤
+	 * 钻石会员隐藏密码、身份证		白金、黄金会员隐藏密码、身份证、手机号		
+	 * 白银、青铜会员隐藏密码、身份证、手机号、真实姓名		普通会员隐藏密码、身份证、手机号、真实姓名、邮箱
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:11:50
+	 */
 	@RequestMapping(value = "/personalDetails",method = RequestMethod.GET)
     public String personalDetails(HttpServletRequest request, Model model) {
 		String uid = request.getParameter("uid");
@@ -237,5 +294,34 @@ public class ForwardingAction {
 		model.addAttribute("userBackgroundImgs", backgroundImgs);
 		model.addAttribute("uploadImageAndParams", "uploadImage?type=1&uid="+user.getUid());
 		return "personalDetails";
+    }
+
+	/**
+	 * 
+	 * @Description: 登陆成功-显示当前用户的好友列表与第一个用户的聊天记录
+	 * @param 
+	 * @return String
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:16:23
+	 */
+	@RequestMapping(value = "/userFriendsList",method = RequestMethod.GET)
+    public String userFriendsList(HttpServletRequest request, Model model) {
+		String identityInfo = (String) request.getSession().getAttribute("username");
+		User user = userService.queryByIdentityInfo(identityInfo);
+		List<Integer> uids = userRelationService.findUserByUidAndAndRelations(user.getUid(),
+				ConstantParams.USER_RELATION_LIKE, ConstantParams.USER_RELATION_LIKE);
+		List<User> friendsList = userService.findAllUsersByUid(uids);
+		List<User> filterFriendsInfoList = new ArrayList<User>();
+		for(User friends : friendsList) {
+			User friend = new User();
+			friend.setUid(friends.getUid());
+			friend.setNickname(friends.getNickname());
+			List<TbUserImg> friendsHeadImgs = userImgService.findByUidAndImgType(friends.getUid(), ConstantParams.HEADIMG);
+			friend.setHeadImgPath((friendsHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + friendsHeadImgs.get(0).getImgUUID()));
+			filterFriendsInfoList.add(friend);
+		}
+		model.addAttribute("friendsList", filterFriendsInfoList);
+        return "userFriendsList";
     }
 }

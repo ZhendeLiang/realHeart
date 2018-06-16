@@ -10,6 +10,7 @@ import com.liangzd.realHeart.entity.User;
 
 public interface UserService {
 	public List<User> findAllUsers();
+	public List<User> findAllUsersByUid(List<Integer> uids);
 	public List<User> findAllUsersWithViprankName();
 	public List<User> findAllUserWithSearch(User user);
 	public void addUser(User user);

@@ -1,35 +1,29 @@
 package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 
-import org.hibernate.annotations.ForeignKey;
-
-import com.alibaba.fastjson.annotation.JSONField;
-
-import javax.persistence.JoinColumn;
-
+/**
+ * 
+ * @Description: tr_user_address表的持久化类,用户与详细地址的关系表
+ * @author liangzd
+ * @date 2018年6月16日 下午9:28:59
+ */
 @Entity(name="tr_user_address")
 public class TrUserAddress implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Integer id;//主键
 	@Column(unique = true,length = 11)
-	private Integer userId;
+	private Integer userId;//用户uid,长度11
 	@Column(length = 11)
-	private Integer addressId;
+	private Integer addressId;//详细地址的id,长度11
 	public Integer getId() {
 		return id;
 	}

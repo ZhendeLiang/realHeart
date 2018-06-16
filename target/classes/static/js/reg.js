@@ -144,7 +144,7 @@ $(function(){
 
 	// 检测验证码是否正确
 	function cpcode(){
-		debugger;
+		;
 		var phone = $.trim($('#tel').val());
 		var code = $.trim($('#veri-code').val());
 		if (checkcode(code)) {
@@ -189,7 +189,7 @@ $(function(){
 
 	// 注册按钮点击事件
 	$('.lang-btn').on('click',function(){
-		debugger;
+		;
 		var phone = $.trim($('#tel').val());
 		if (pstatus) {
 			var code = $.trim($('#veri-code').val());
@@ -269,7 +269,7 @@ $(function(){
 		            async: true,
 		            data: {phone:phone,type:"regist",note:note,veri:veri},
 		            success:function(data){
-		            	debugger;
+		            	;
 		                if (data.code == '0') {
 		                    var oTime = $(".form-data .time"),
 							oSend = $(".form-data .send"),
