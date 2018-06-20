@@ -24,7 +24,7 @@ import javax.persistence.JoinColumn;
  * @date 2018年6月16日 下午9:32:14
  */
 @Entity(name="tb_user")
-public class User implements Serializable{
+public class User implements Serializable,Comparable<User>{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -61,8 +61,9 @@ public class User implements Serializable{
 	private String headImgPath;  //非持久化属性,头像存储路径
 	@Transient
 	private String lastUserChat;//非持久化属性,用户的最后一条聊天记录
-	@JSONField(format="yyyy-mm-dd hh:mm:ss")
-	private Timestamp lastUserChatTime;//最后聊天时间
+	@JSONField(format="MM-dd HH:mm")//对应JSON数据格式化类型
+	@Transient
+	private Timestamp lastUserChatTime;//非持久化对象,最后聊天时间
 	public Integer getUid() {
 		return uid;
 	}
@@ -173,5 +174,15 @@ public class User implements Serializable{
 				+ ", roleList=" + roleList + ", viprankName=" + viprankName + ", addressId=" + addressId
 				+ ", headImgPath=" + headImgPath + ", lastUserChat=" + lastUserChat + ", lastUserChatTime="
 				+ lastUserChatTime + "]";
+	}
+	@Override
+	public int compareTo(User o) {
+		if(this.getLastUserChatTime().before(o.getLastUserChatTime())) {
+			return 1;
+		}else if(this.getLastUserChatTime().equals(o.getLastUserChatTime())){
+			return this.getUid() - o.getUid();
+		}else {
+			return -1;
+		}
 	}
 }

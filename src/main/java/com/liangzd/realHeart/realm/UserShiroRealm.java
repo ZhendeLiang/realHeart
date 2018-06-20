@@ -42,6 +42,14 @@ public class UserShiroRealm extends AuthorizingRealm{
 		super.setName("UserShiroRealm");
 	}
 	
+	/**
+	 * 
+	 * @Description: 重写身份验证方法,普通用户身份匹配tb_user
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:18:46
+	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
 	        throws AuthenticationException {
@@ -49,7 +57,6 @@ public class UserShiroRealm extends AuthorizingRealm{
 //	    UserInfo userInfo = userInfoService.findByUsername(username);
 //		User user = null;
 //		Optional<User> users = LoginService.getUserByIdentity((String)token.getPrincipal());
-		
 		String identityInfo = (String)token.getPrincipal();
 		User user;
 		Optional<User> users = null;
@@ -93,6 +100,14 @@ public class UserShiroRealm extends AuthorizingRealm{
 	    return authenticationInfo;
 	}
 
+	/**
+	 * 
+	 * @Description: 重写获取授权的方法,此处没用上,@TODO二期开始
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:17:58
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");

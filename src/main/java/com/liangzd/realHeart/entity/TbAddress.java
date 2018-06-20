@@ -67,4 +67,9 @@ public class TbAddress implements Serializable{
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+	@Override
+	public String toString() {
+		return "TbAddress [id=" + id + ", province=" + province + ", city=" + city + ", town=" + town + ", details="
+				+ details + ", uid=" + uid + "]";
+	}
 }

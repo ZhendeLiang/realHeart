@@ -26,6 +26,12 @@ import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.UserService;
 import com.liangzd.realHeart.util.MethodUtil;
 
+/**
+ * 
+ * @Description: 处理关于用户的增删查改业务处理接口的实现类
+ * @author liangzd
+ * @date 2018年6月20日 下午2:21:54
+ */
 @Service
 public class UserServiceImpl implements UserService{
 	@Autowired
@@ -55,11 +61,6 @@ public class UserServiceImpl implements UserService{
 	public void setAdminUserDao(AdminUserDao adminUserDao) {
 		this.adminUserDao = adminUserDao;
 	}
-
-	public List<User> findAllUsers() {
-		List<User> users = userDao.findAll();
-		return users;
-	}
 	
 	public TrUserViprankDao getTrUserViprankDao() {
 		return trUserViprankDao;
@@ -77,6 +78,32 @@ public class UserServiceImpl implements UserService{
 		this.trUserAddressDao = trUserAddressDao;
 	}
 
+	/**
+	 * 
+	 * @Description: 查找所有用户,无条件返回
+	 * @param 
+	 * @return List<User>
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:45:36
+	 */
+	public List<User> findAllUsers() {
+		List<User> users = userDao.findAll();
+		return users;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据用户uids,批量查找用户
+	 * @param 
+	 * @return List<User>
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:51:19
+	 */
+	@Override
+	public List<User> findAllUsersByUid(List<Integer> uids) {
+		return userDao.findAllById(uids);
+	}
+	
 	/**
 	 * 
 	 * @Description: 获取所有用户，并级联抓取会员等级信息
@@ -102,6 +129,44 @@ public class UserServiceImpl implements UserService{
 		return users;
 	}
 
+	/**
+	 * 
+	 * @Description: 条件查询所有用户
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年5月31日 下午4:49:47
+	 */
+	@Override
+	public List<User> findAllUserWithSearch(User user) {
+		List<User> users = null;
+		List<User> finallyUsers = new ArrayList<User>();
+		String username = StringUtils.isEmpty(user.getUsername()) ? "%" : "%"+user.getUsername()+"%";
+		String email = StringUtils.isEmpty(user.getEmail()) ? "%" : "%"+user.getEmail()+"%";
+		String phoneNumber = StringUtils.isEmpty(user.getPhoneNumber()) ? "%" : "%"+user.getPhoneNumber()+"%";
+		String gender = "-1".equals(user.getGender()) ? "%" : user.getGender();
+		if("-1".equals(String.valueOf(user.getState()))) {
+			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLike(
+					username, email, phoneNumber, gender);
+		}else {
+			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLikeAndStateLike(
+					username, email, phoneNumber, gender, user.getState());
+		}
+		if(!"-1".equals(user.getViprankName())) {
+			List<TrUserViprank> trUserVipranks = trUserViprankDao.findByViprankId(Integer.parseInt(user.getViprankName()));
+			for(User queryUser : users) {
+				for(TrUserViprank trUserViprank : trUserVipranks) {
+					if(trUserViprank.getUserId().equals(queryUser.getUid())) {
+						finallyUsers.add(queryUser);
+					}
+				}
+			}
+		}else {
+			finallyUsers = users;
+		}
+		return finallyUsers;
+	}
+	
 	/**
 	 * 属于事务管理范畴
 	 * @Description: 添加用户，同时修改会员等级关系表
@@ -197,44 +262,6 @@ public class UserServiceImpl implements UserService{
 
 	/**
 	 * 
-	 * @Description: 条件查询所有用户
-	 * @param 
-	 * @return 
-	 * @author liangzd
-	 * @date 2018年5月31日 下午4:49:47
-	 */
-	@Override
-	public List<User> findAllUserWithSearch(User user) {
-		List<User> users = null;
-		List<User> finallyUsers = new ArrayList<User>();
-		String username = StringUtils.isEmpty(user.getUsername()) ? "%" : "%"+user.getUsername()+"%";
-		String email = StringUtils.isEmpty(user.getEmail()) ? "%" : "%"+user.getEmail()+"%";
-		String phoneNumber = StringUtils.isEmpty(user.getPhoneNumber()) ? "%" : "%"+user.getPhoneNumber()+"%";
-		String gender = "-1".equals(user.getGender()) ? "%" : user.getGender();
-		if("-1".equals(String.valueOf(user.getState()))) {
-			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLike(
-					username, email, phoneNumber, gender);
-		}else {
-			users = userDao.findUserByUsernameLikeAndEmailLikeAndPhoneNumberLikeAndGenderLikeAndStateLike(
-					username, email, phoneNumber, gender, user.getState());
-		}
-		if(!"-1".equals(user.getViprankName())) {
-			List<TrUserViprank> trUserVipranks = trUserViprankDao.findByViprankId(Integer.parseInt(user.getViprankName()));
-			for(User queryUser : users) {
-				for(TrUserViprank trUserViprank : trUserVipranks) {
-					if(trUserViprank.getUserId().equals(queryUser.getUid())) {
-						finallyUsers.add(queryUser);
-					}
-				}
-			}
-		}else {
-			finallyUsers = users;
-		}
-		return finallyUsers;
-	}
-
-	/**
-	 * 
 	 * @Description: 根据用户名查找用户
 	 * @param 
 	 * @return 
@@ -272,12 +299,28 @@ public class UserServiceImpl implements UserService{
 		return userDao.findByEmail(email);
 	}
 
+	/**
+	 * 
+	 * @Description: 根据用户uid和密码,更新用户的密码,受事务管理
+	 * @param 
+	 * @return void
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:56:47
+	 */
 	@Transactional
 	@Override
 	public void updateUserPassword(Integer uid, String password) {
 		userDao.updateUserPassword(uid, password);
 	}
-	
+
+	/**
+	 * 
+	 * @Description: 根据用户的唯一信息(用户uid、用户名、手机号、邮箱)查找用户
+	 * @param 
+	 * @return User
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:57:18
+	 */
 	public User queryByIdentityInfo(String identityInfo) {
 		Optional<User> users = null;
 		if(!StringUtils.isEmpty(identityInfo)) {
@@ -308,6 +351,14 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 
+	/**
+	 * 
+	 * @Description: 根据用户的性别和用户状态(0可用,1不可用)查找用户信息
+	 * @param 
+	 * @return Page<User>
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:58:28
+	 */
 	@Override
 	public Page<User> findByGenderAndState(String gender, Byte state, Integer pageNum, Integer pageSize, List<Integer> uids) {
 		Sort sort = new Sort(Sort.Direction.ASC,"uid"); //创建时间降序排序
@@ -319,16 +370,19 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
+	/**
+	 * 
+	 * @Description: 根据用户的uid查找用户的会员等级关系关系
+	 * @param 
+	 * @return TrUserViprank
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:59:01
+	 */
 	@Override
 	public TrUserViprank findUserViprankByUserId(Integer id) {
 		TrUserViprank trUserViprank = null;
 		Optional<TrUserViprank> hasUserViprank = trUserViprankDao.findByUserId(id);
 		trUserViprank = hasUserViprank.isPresent() ? hasUserViprank.get() : null; 
 		return trUserViprank;
-	}
-
-	@Override
-	public List<User> findAllUsersByUid(List<Integer> uids) {
-		return userDao.findAllById(uids);
 	}
 }

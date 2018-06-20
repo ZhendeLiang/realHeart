@@ -43,6 +43,14 @@ public class AdminShiroRealm extends AuthorizingRealm{
 		super.setName("AdminShiroRealm");
 	}
 	
+	/**
+	 * 
+	 * @Description: 重写身份验证方法,管理员身份匹配tb_admin_user
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:18:46
+	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
 	        throws AuthenticationException {
@@ -72,6 +80,14 @@ public class AdminShiroRealm extends AuthorizingRealm{
 	    return authenticationInfo;
 	}
 
+	/**
+	 * 
+	 * @Description: 重写获取授权的方法,此处没用上,@TODO二期开始
+	 * @param 
+	 * @return 
+	 * @author liangzd
+	 * @date 2018年6月20日 下午2:17:58
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");

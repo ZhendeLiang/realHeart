@@ -42,4 +42,8 @@ public class TrUserAddress implements Serializable{
 	public void setAddressId(Integer addressId) {
 		this.addressId = addressId;
 	}
+	@Override
+	public String toString() {
+		return "TrUserAddress [id=" + id + ", userId=" + userId + ", addressId=" + addressId + "]";
+	}
 }

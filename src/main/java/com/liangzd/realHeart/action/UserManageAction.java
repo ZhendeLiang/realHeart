@@ -2,6 +2,7 @@ package com.liangzd.realHeart.action;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +20,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.VO.ResponseJson;
+import com.liangzd.realHeart.VO.UserComparableVo;
+import com.liangzd.realHeart.VO.UserEntityVo;
 import com.liangzd.realHeart.VO.UserImgVo;
+import com.liangzd.realHeart.entity.TbUserChatRecord;
 import com.liangzd.realHeart.entity.TbUserImg;
 import com.liangzd.realHeart.entity.TbUserRelation;
 import com.liangzd.realHeart.entity.User;
+import com.liangzd.realHeart.service.UserChatRecordService;
 import com.liangzd.realHeart.service.UserImgService;
 import com.liangzd.realHeart.service.UserRelationService;
 import com.liangzd.realHeart.service.UserService;
@@ -42,6 +47,9 @@ public class UserManageAction {
 
 	@Autowired
 	private UserRelationService userRelationService;
+	
+	@Autowired
+	private UserChatRecordService userChatRecordService;
 	
 	public UserService getUserService() {
 		return userService;
@@ -65,6 +73,14 @@ public class UserManageAction {
 
 	public void setUserRelationService(UserRelationService userRelationService) {
 		this.userRelationService = userRelationService;
+	}
+
+	public UserChatRecordService getUserChatRecordService() {
+		return userChatRecordService;
+	}
+
+	public void setUserChatRecordService(UserChatRecordService userChatRecordService) {
+		this.userChatRecordService = userChatRecordService;
 	}
 
 	/**
@@ -427,6 +443,7 @@ public class UserManageAction {
 				tbUserRelation.setFirstUid(hasUser.getUid());
 				tbUserRelation.setFirstUserRelation(relation);
 				tbUserRelation.setSecondUid(targetUid);
+				tbUserRelation.setCreateTime(new Timestamp(System.currentTimeMillis()));
 				userRelationService.saveUserRelation(tbUserRelation);
 				responseJson.setCode(0);
 				responseJson.setMsg("0".equals(relation) ? 
@@ -459,22 +476,53 @@ public class UserManageAction {
 		List<Integer> uids = userRelationService.findUserByUidAndAndRelations(user.getUid(),
 				ConstantParams.USER_RELATION_LIKE, ConstantParams.USER_RELATION_LIKE);
 		List<User> friendsList = userService.findAllUsersByUid(uids);
-		List<User> filterFriendsInfoList = new ArrayList<User>();
+		List<UserEntityVo> filterFriendsInfoList = new ArrayList<UserEntityVo>();
 		for(User friends : friendsList) {
-			User friend = new User();
+			UserEntityVo friend = new UserEntityVo();
 			if(!StringUtils.isEmpty(friends.getNickname()) && friends.getNickname().contains(searchKey)) {
 				friend.setUid(friends.getUid());
 				friend.setNickname(friends.getNickname());
 				List<TbUserImg> friendsHeadImgs = userImgService.findByUidAndImgType(friends.getUid(), ConstantParams.HEADIMG);
 				friend.setHeadImgPath((friendsHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
 					ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + friendsHeadImgs.get(0).getImgUUID()));
+				//查找用户朋友列表对应的最后一条聊天记录
+				TbUserChatRecord userChat = new TbUserChatRecord();
+				userChat.setFromUid(user.getUid());
+				userChat.setToUid(friends.getUid());
+				TbUserChatRecord lastChatRecord = userChatRecordService.findLatestByFromUidAndToUid(userChat);
+				if(lastChatRecord == null) {
+					String defaultChat = "快点来开始聊天吧。";
+					friend.setLastUserChat(defaultChat);
+					//查找对应用户关系的对象，用于获取成为朋友的时间
+					Optional<TbUserRelation> userRelation = userRelationService.findByUidAndTargetUid(user.getUid(), friends.getUid());
+					friend.setLastUserChatTime(userRelation.isPresent() ? userRelation.get().getCreateTime() : new Timestamp(System.currentTimeMillis()));
+				}else {
+					friend.setLastUserChat(lastChatRecord.getChatRecode());
+					friend.setLastUserChatTime(lastChatRecord.getLastChatTime());
+				}
 				filterFriendsInfoList.add(friend);
 			}
 		}
+		//根据时间-用户uid排序
+		Collections.sort(filterFriendsInfoList);
 		if(filterFriendsInfoList.size() == 0) {
 			responseJson.setCode(1);
 			responseJson.setMsg("无对应用户");
 		}else{
+			Integer toUid = filterFriendsInfoList.get(0).getUid();
+			TbUserChatRecord userChat = new TbUserChatRecord();
+			userChat.setFromUid(user.getUid());
+			userChat.setToUid(toUid);
+			List<TbUserChatRecord> allChatRecords = userChatRecordService.findAllByFromUidAndToUid(userChat);
+			List<TbUserImg> fromUidHeadImgs = userImgService.findByUidAndImgType(user.getUid(), ConstantParams.HEADIMG);
+			List<TbUserImg> toUidHeadImgs = userImgService.findByUidAndImgType(toUid, ConstantParams.HEADIMG);
+			if(allChatRecords.size() != 0) {
+				allChatRecords.get(0).setFromUserImgPath((fromUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+					ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + fromUidHeadImgs.get(0).getImgUUID()));
+				allChatRecords.get(0).setToUserImgPath((toUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+					ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + toUidHeadImgs.get(0).getImgUUID()));
+			}
+			filterFriendsInfoList.get(0).setUserChatRecords(allChatRecords);
 			responseJson.setCode(0);
 			responseJson.setMsg(filterFriendsInfoList);
 		}
@@ -492,9 +540,107 @@ public class UserManageAction {
 	@ResponseBody
 	@RequestMapping(value = "/queryUserChatRecord",method = RequestMethod.GET)
     public ResponseJson queryUserChatRecord(HttpServletRequest request) {
-		/*String uid = request.getParameter("uid");
+		Integer toUid = Integer.parseInt(request.getParameter("toUid"));
 		String identityInfo = (String) request.getSession().getAttribute("username");
-		User user = userService.queryByIdentityInfo(identityInfo);*/
+		User user = userService.queryByIdentityInfo(identityInfo);
+		TbUserChatRecord userChat = new TbUserChatRecord();
+		userChat.setFromUid(user.getUid());
+		userChat.setToUid(toUid);
+		List<TbUserChatRecord> allChatRecords = userChatRecordService.findAllByFromUidAndToUid(userChat);
+		List<TbUserImg> fromUidHeadImgs = userImgService.findByUidAndImgType(user.getUid(), ConstantParams.HEADIMG);
+		List<TbUserImg> toUidHeadImgs = userImgService.findByUidAndImgType(toUid, ConstantParams.HEADIMG);
+		if(allChatRecords.size() != 0) {
+			allChatRecords.get(0).setFromUserImgPath((fromUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + fromUidHeadImgs.get(0).getImgUUID()));
+			allChatRecords.get(0).setToUserImgPath((toUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + toUidHeadImgs.get(0).getImgUUID()));
+			responseJson.setCode(0);
+			responseJson.setMsg(allChatRecords);
+		}else {
+			responseJson.setCode(1);
+			responseJson.setMsg("暂无聊天记录");
+		}
+		//查找聊天记录
+        return responseJson;
+    }
+
+
+	/**
+	 * 
+	 * @Description: 个人主页-好友聊天,保存该用户与好友的聊天记录
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:00:46
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveUserChat",method = RequestMethod.POST)
+    public ResponseJson saveUserChat(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("utf-8");
+			Integer toUid = Integer.parseInt(request.getParameter("toUid"));
+			String chatRecode = request.getParameter("chatRecode");
+			String identityInfo = (String) request.getSession().getAttribute("username");
+			User user = userService.queryByIdentityInfo(identityInfo);
+			TbUserChatRecord userChatRecord = new TbUserChatRecord();
+			userChatRecord.setFromUid(user.getUid());
+			userChatRecord.setToUid(toUid);
+			userChatRecord.setChatRecode(chatRecode);
+//			userChatRecord.setType(0);
+			userChatRecord.setLastChatTime(new Timestamp(System.currentTimeMillis()));
+			TbUserChatRecord saveUserChat = userChatRecordService.saveUserChat(userChatRecord);
+			responseJson.setCode(0);
+			responseJson.setMsg(saveUserChat);
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseJson.setCode(1);
+			responseJson.setMsg("系统错误");
+		}
+		return responseJson;
+    }
+
+	/**
+	 * 
+	 * @Description: 查找当前用户的聊天记录
+	 * @param 
+	 * @return ResponseJson
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:26:25
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryLatestUserChatRecord",method = RequestMethod.GET)
+    public ResponseJson queryLatestUserChatRecord(HttpServletRequest request) {
+		String lastChatIdStr = request.getParameter("lastChatIds");
+		if(!StringUtils.isEmpty(lastChatIdStr) && !"".equals(lastChatIdStr)) {
+			String identityInfo = (String) request.getSession().getAttribute("username");
+			User user = userService.queryByIdentityInfo(identityInfo);
+			String[] lastUidAndChatIdArray = lastChatIdStr.split(";");
+			List<UserComparableVo> latestUserChat = new ArrayList<UserComparableVo>();
+			for(String lastUidAndChatId : lastUidAndChatIdArray) {
+				String[] params = lastUidAndChatId.split(":");
+				UserComparableVo latestUser = new UserComparableVo();
+				TbUserChatRecord userChat = new TbUserChatRecord();
+				userChat.setFromUid(user.getUid());
+				userChat.setToUid(Integer.parseInt(params[0]));
+				userChat.setId(Integer.parseInt(params[1]));
+				List<TbUserChatRecord> allChatRecords = userChatRecordService.findAllLatestChatByFromUidAndToUid(userChat);
+				latestUser.setUid(Integer.parseInt(params[0]));
+				latestUser.setUserChatRecords(allChatRecords);
+				latestUser.setNewsCount(allChatRecords.size());
+				latestUserChat.add(latestUser);
+			}
+			Collections.sort(latestUserChat);
+			if(lastUidAndChatIdArray.length > 0) {
+				responseJson.setCode(0);
+				responseJson.setMsg(latestUserChat);
+			}else {
+				responseJson.setCode(1);
+				responseJson.setMsg("暂无聊天用户");
+			}
+		}else {
+			responseJson.setCode(1);
+			responseJson.setMsg("暂无聊天用户");
+		}
 		//查找聊天记录
         return responseJson;
     }

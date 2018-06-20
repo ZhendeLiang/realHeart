@@ -52,4 +52,23 @@ public interface TbUserChatRecordDao extends JpaRepository<TbUserChatRecord, Int
 	 * @date 2018年6月16日 下午8:32:15
 	 */
 	public List<TbUserChatRecord> findByToUidAndFromUid(Integer fromUid, Integer toUid,Sort sort);
+
+	/**
+	 * 
+	 * @Description: 根据FromUid和ToUid查找用户与用户间且id>指定数的聊天记录对象,根据Sort对象进行排序
+	 * @param 
+	 * @return List<TbUserChatRecord>
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:32:07
+	 */
+	public List<TbUserChatRecord> findByFromUidAndToUidAndIdGreaterThan(Integer fromUid, Integer toUid,Integer id, Sort sort);
+	/**
+	 * 
+	 * @Description: 根据FromUid和ToUid(但已经调换位置)查找用户与用户间且id>指定数的聊天记录对象,根据Sort对象进行排序
+	 * @param 
+	 * @return List<TbUserChatRecord>
+	 * @author liangzd
+	 * @date 2018年6月16日 下午8:32:15
+	 */
+	public List<TbUserChatRecord> findByToUidAndFromUidAndIdGreaterThan(Integer fromUid, Integer toUid,Integer id, Sort sort);
 }

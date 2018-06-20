@@ -3,134 +3,431 @@
 
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>用户列表</title>
 <link rel="stylesheet" href="/css/styleUserList.css">
 <link rel="stylesheet" href="/welcome/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/styleChat.css" media="screen"
+	type="text/css" />
 <style>
-	.opacityAndFontWhire{
-		background: rgba(0, 0, 0, 0.5);
-		color: white;
-	}
+.opacityAndFontWhire {
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+}
+.friendsName {
+  animation: show-chat-even 0.15s 1 ease-in;
+  -moz-animation: show-chat-even 0.15s 1 ease-in;
+  -webkit-animation: show-chat-even 0.15s 1 ease-in;
+  float: left;
+  margin-left: 80px;
+  color: white;
+  font-size: 20px;
+}
+.main-btn textarea {
+	border-radius: 0px;
+	padding-left: 15px;
+	padding-top: 10px;
+	font-size: 13px;
+	font-weight: 300;
+	color: #fff;
+	background-color: rgba(250, 250, 250, 0.15);
+	outline: none;
+	border: none;
+	box-shadow: none;
+	height: 55px;
+	max-height: 220px;
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 25px;
+}
+
+.main-btn a {
+	display: inline-block;
+	border: 2px solid #fff;
+	padding: 8px 15px;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: #fff;
+	text-decoration: none;
+	transition: all 0.5s;
+	text-align: left;
+}
+
 </style>
 </head>
 
 <body style="background: rgba(0, 0, 0, 0);">
 	<div class="row">
-		<div class="col-md-2">
-			<div class="col-md-12" style="padding: 0px; margin: 0px;width: 207px;">
+		<div class="col-md-12">
+			<div class="col-md-12"
+				style="padding: 0px; margin: 0px; width: 207px;">
 				<div class="form-group">
-					<input type="text" class="form-control opacityAndFontWhire" id="searchFriends" style="height:50px;"
-						placeholder="请输入用户名">
+					<input type="text" class="form-control opacityAndFontWhire"
+						id="searchFriends" style="height: 50px;" placeholder="请输入用户名">
 				</div>
 			</div>
 			<div class="menu-container">
-				<menu th:each="friendsInfo,listStat:${friendsList}" >
-					<!-- <menuitem th:onclick="'chattingWithUser('+${friendsInfo.uid}+');'" th:lang="${friendsInfo.uid}" th:utext="'<img src='+${friendsInfo.headImgPath}+'/>'+${friendsInfo.nickname}"> 
-					</menuitem> -->
-					<menuitem name="chattingUser" th:lang="${friendsInfo.uid}" th:utext="'<img src='+${friendsInfo.headImgPath}+'/>'+${friendsInfo.nickname}"> 
+				<menu th:each="friendsInfo,listStat:${friendsList}">
+					<menuitem name="chattingUser" th:label="${friendsInfo.nickname}+'&'+${friendsInfo.headImgPath}"
+						th:lang="${friendsInfo.uid}"
+						th:utext="'<img style=float:left;height:80px; src='
+					+${friendsInfo.headImgPath}+'>'+'<p style=width:180px;height:5px;position:relative;top:-15px;>'
+					+${friendsInfo.nickname}+'</p><span class=badge style=float:right;></span><p style=width:50px;height:50px;text-overflow:ellipsis;overflow:hidden;>'+${friendsInfo.lastUserChat}+'</p>'">
 					</menuitem>
+					<span id="timeSpan"
+						style="position: relative; top: 5px; left: -20px;"
+						th:text="${#dates.format(friendsInfo.lastUserChatTime,'MM-dd HH:mm')}">4564546</span>
 				</menu>
 				<div class="sliding-bar"></div>
 			</div>
 		</div>
-		<div class="col-md-10">
-			<div class="col-md-12" id="chatTitle">
-				
+		<div align="center" class="friendsName" id="chatTitle" style="height: 40px;position:absolute;left:50%;top: 0px;"></div>
+		<div class="col-md-12" id="chatDiv"
+			style="margin-left: 250px; top: -65px; height: 720px; overflow: auto;">
+			<div align="center" style="height: 680px;overflow: auto;">
+				<div id="convo" data-from="Sonu Joshi">
+					<ul class="chat-thread">
+						<li th:each="chatDetails,listStat:${currentFriendsChatAllChatRecords}" 
+						 th:class="${chatDetails.fromUid} == ${currentUserUid} ? 'fromUser' : 'toUser'"
+						 th:text="${chatDetails.chatRecode}"></li>
+					</ul>
+					<input type="hidden" id="lastChatId" th:value="${lastChatIds}">
+				</div>
 			</div>
-			<div style="background-color: white; height:500px;">
-				内容
+			<div class="main-btn">
+				<div class="col-md-8">
+					<fieldset>
+						<textarea style="color: #fff;" name="message" rows="6" class="form-control" id="detaildsMessage"	placeholder="Your message..." required=""></textarea>
+					</fieldset>
+				</div>
+				<div id="sendUserChat" th:if="${friendsList.size() > 0}" th:lang="${friendsList.get(0).uid}" class="col-md-4" style="text-align: left;padding-top: 10px;">
+					<a href="#3">发送</a>
+				</div>
+				<div id="sendUserChat" th:if="${friendsList.size() == 0}" th:lang="0" class="col-md-4" style="text-align: left;padding-top: 10px;">
+					<a href="#3">发送</a>
+				</div>
 			</div>
 		</div>
 	</div>
-	<script src="/welcome/upload/jquery-3.2.1.min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		$(function(){
-			$('menuitem[name="chattingUser"]').on('click', function(event) {
-				$("#chatTitle").html(this.innerText);
-				/* $.ajax({
-	            url: '/filter/json/queryUserChatRecord',
-	            type: 'get',
-	            dataType: 'json',
-	            async: false,
-	            data: {
-	            	uid:uid
-	            },
-	            success:function(data){
-	                if (data.code == '0') {
-	                	var html = '';
-						//重新加载数据
-						for(i = 0; i < data.msg.length; i++) {
-							html += '<menu><menuitem lang="'+data.msg[i].uid+'" onclick="chattingWithUser('+data.msg[i].uid+');"><img src="'+data.msg[i].headImgPath+'"/>'+data.msg[i].nickname+'</menuitem></menu>';
-						}
-						$("div .menu-container").html(html);
-	                } else {
-	                	$("div .menu-container").html(data.msg);
-	                }
-	            },
-	            error:function(){
-	            	status = false;
-	            }
-	        }); */
-			});
-		})
+	<script src="/welcome/upload/jquery-3.2.1.min.js" ></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var chatFlushTime = [[${chatFlushTime}]]
+        var toUserImg = [[${toUserImgPath}]];
+        var fromUserImg = [[${fromUserImgPath}]];
+	/*]]>*/  
 	
-		$("#searchFriends").blur(function(){
+		$(function() {
+			var menusNum = $(".menu-container menu");
+			if (menusNum.length > 7) {
+				$(".menu-container").css("height", "670px");
+			}
+			if (menusNum.length > 0) {
+				$("#chatTitle").html($(menusNum[0].firstElementChild).attr("label").split("&")[0]);
+			} else {
+				$("#chatTitle").html('暂无用户聊天');
+			}
+			$('menuitem[name="chattingUser"]').on('click', function(event) {
+				showChatDetails(this);
+			});
+			
+            $("ul.chat-thread").scrollTop($("ul.chat-thread")[0].scrollHeight);
+            $("#chatDiv").scrollTop($("#chatDiv")[0].scrollHeight);
+            $("<style type='text/css' id='dynamic-before' />").appendTo("head");
+            changeHeadImg();
+            $('#sendUserChat').on('click', function(event) {
+            	var toUid = $(this).attr("lang");
+            	if(toUid != 0){
+            		var befordChat = $("ul.chat-thread").html();
+                	var newChat = $("#detaildsMessage").val();
+                	var chatRecode = newChat;
+                	$.ajax({
+    				    url: '/filter/json/saveUserChat',
+    				    type: 'post',
+    				    dataType: 'json',
+    				    async: false,
+    				    data: {
+    				    	toUid:toUid,chatRecode:chatRecode
+    				    },
+    				    success:function(data){
+    				        if (data.code == '0') {
+    				        	$("ul.chat-thread").html(befordChat+"<li class='fromUser'>"+newChat+"</li>");
+    			            	$("#detaildsMessage").val("");
+								//修改与用户聊天的最新消息
+    			            	$("menuitem[lang='"+toUid+"']")[0].childNodes[3].innerText = newChat;
+								//修改最后聊天时间
+				    			$("menuitem[lang='"+toUid+"']")[0].nextElementSibling.innerHTML = data.msg.lastChatTime;
+								//修改最新聊天id
+								var currentChatIdArray = $("#lastChatId").val().split(";");
+								var latestChatIdArray = "";
+								for(var i = 0; i < currentChatIdArray.length; i++){
+									var params = currentChatIdArray[i].split(":");
+									if(params[0] == toUid){
+										latestChatIdArray += params[0]+":"+data.msg.id+";";
+									}else{
+										latestChatIdArray += currentChatIdArray[i]+";";
+									}
+								}
+								if(latestChatIdArray.indexOf(";") != -1){
+									latestChatIdArray = latestChatIdArray.substring(0,latestChatIdArray.length-1);
+								}
+								$("#lastChatId").val(latestChatIdArray);
+    				        }
+    				    },
+    				    error:function(){
+    				    	status = false;
+    				    }
+    				});
+            	}else{
+            		alert("暂无聊天用户");
+            	}
+			});
+            //定期查询消息
+            setInterval(queryUserChat,chatFlushTime);
+		})
+		
+		/* 网页同步用户聊天消息 */
+		function queryUserChat(){
+			var lastChatIds = $("#lastChatId").val();
+			$.ajax({
+			    url: '/filter/json/queryLatestUserChatRecord',
+			    type: 'get',
+			    dataType: 'json',
+			    async: false,
+			    data: {
+			    	lastChatIds:lastChatIds
+			    },
+			    success:function(data){
+			    	var newFriendList = "";
+			    	var unchangeFriendList = "";
+			    	var outerParentDiv;
+			    	for(i = 0; i < data.msg.length; i++){
+			    		if(i == 0){
+			    			outerParentDiv = $("menuitem[lang='"+data.msg[i].uid+"']").parent().parent();
+			    		}
+			    		if(data.msg[i].newsCount > 0){
+					    	//修改气泡徽章
+			    			$("menuitem[lang='"+data.msg[i].uid+"']")[0].childNodes[2].innerText = data.msg[i].newsCount;
+				    		//修改最后聊天内容
+					    	$("menuitem[lang='"+data.msg[i].uid+"']")[0].childNodes[3].innerText = data.msg[i].userChatRecords[data.msg[i].userChatRecords.length -1].chatRecode;
+				    		//修改最后聊天时间
+				    		$("menuitem[lang='"+data.msg[i].uid+"']")[0].nextElementSibling.innerHTML = data.msg[i].userChatRecords[data.msg[i].userChatRecords.length -1].lastChatTime;
+				    		//获取新的用户信息
+				    		newFriendList += $("menuitem[lang='"+data.msg[i].uid+"']").parent().prop("outerHTML");
+				    		//将旧的用户信息删除
+				    		$("menuitem[lang='"+data.msg[i].uid+"']").parent().remove();
+				    	}
+			    	}
+		    		unchangeFriendList = outerParentDiv.prop("innerHTML");
+			    	outerParentDiv.prop("innerHTML",newFriendList+unchangeFriendList);
+			    	$('menuitem').hover(
+							function() {
+								var offset = $(this).offset();
+								$('.sliding-bar').offset(offset);
+							});
+					$('menu').hover(function() {
+						$('.sliding-bar').css({
+							opacity: 1
+						});
+					}, function() {
+						$('.sliding-bar').css({
+							opacity: 0
+						});
+					})
+					initMenu();
+					$('menuitem[name="chattingUser"]').on('click',
+					function(event) {
+						showChatDetails(this);
+					});
+			    },
+			    error:function(){
+			    	status = false;
+			    }
+			});
+		}
+		
+		function changeHeadImg()  
+		{  
+		    $("#dynamic-before").text(".chat-thread li.fromUser:before {right: -80px;background-image: url("
+		    		+fromUserImg+");background-repeat:no-repeat;background-size:100% 100%;-moz-background-size:100% 100%;}"
+		    		+".chat-thread li.toUser:before {left: -80px;background-image: url("
+		    		+toUserImg+");background-repeat:no-repeat;background-size:100% 100%;-moz-background-size:100% 100%;}"		
+		    );  
+		}
+
+		function showChatDetails(object) {
+			var nicknameAndHeadImg = $(object).attr("label");
+			var params = nicknameAndHeadImg.split("&");
+			//修改用户2头像
+			toUserImg = params[1];
+			changeHeadImg();
+			$("#chatTitle").html(params[0]);
+			var toUid = $(object).attr("lang");
+			$("#sendUserChat").attr("lang",toUid);
+			$.ajax({
+			    url: '/filter/json/queryUserChatRecord',
+			    type: 'get',
+			    dataType: 'json',
+			    async: false,
+			    data: {
+			    	toUid:toUid
+			    },
+			    success:function(data){
+		        	var ulChatHtml = "";
+			        if (data.code == '0') {
+			        	$("menuitem[lang='"+toUid+"']")[0].childNodes[2].innerText = "";
+						//重新加载数据
+						for(i = 0; i < data.msg.length; i++){
+							var className = "toUser";
+							if(data.msg[i].toUid == toUid){
+								className = "fromUser";
+							}
+							ulChatHtml += "<li class='"+className+"'>"+data.msg[i].chatRecode+"</li>";
+						}
+						
+						var currentChatIdArray = $("#lastChatId").val().split(";");
+						var latestChatIdArray = "";
+						for(var i = 0; i < currentChatIdArray.length; i++){
+							var params = currentChatIdArray[i].split(":");
+							if(params[0] == toUid){
+								latestChatIdArray += params[0]+":"+data.msg[data.msg.length-1].id+";";
+							}else{
+								latestChatIdArray += currentChatIdArray[i]+";";
+							}
+						}
+						if(latestChatIdArray.indexOf(";") != -1){
+							latestChatIdArray = latestChatIdArray.substring(0,latestChatIdArray.length-1);
+						}
+						$("#lastChatId").val(latestChatIdArray);
+			        }
+					$("ul.chat-thread").html(ulChatHtml);
+					$("ul.chat-thread").scrollTop($("ul.chat-thread")[0].scrollHeight);
+		            $("#chatDiv").scrollTop($("#chatDiv")[0].scrollHeight);
+			    },
+			    error:function(){
+			    	status = false;
+			    }
+			});
+		}
+
+		$("#searchFriends").blur(function() {
 			var searchKey = $("#searchFriends").val();
 			/* userFriendsListJson */
 			$.ajax({
-	            url: '/filter/json/userFriendsListJson',
-	            type: 'get',
-	            dataType: 'json',
-	            async: false,
-	            data: {
-	            	searchKey:searchKey
-	            },
-	            success:function(data){
-	                if (data.code == '0') {
-	                	var html = '';
+				url: '/filter/json/userFriendsListJson',
+				type: 'get',
+				dataType: 'json',
+				async: false,
+				data: {
+					searchKey: searchKey
+				},
+				success: function(data) {
+					if(data.code == '0') {
+						var html = '';
+						if(data.msg.length > 7) {
+							$(".menu-container").css(
+								"height", "670px");
+						} else {
+							$(".menu-container").css(
+								"height", "");
+						}
 						//重新加载数据
 						for(i = 0; i < data.msg.length; i++) {
-							html += '<menu><menuitem lang="'+data.msg[i].uid+'" onclick="chattingWithUser('+data.msg[i].uid+');"><img src="'+data.msg[i].headImgPath+'"/>'+data.msg[i].nickname+'</menuitem></menu>';
+							html += '<menu><menuitem name="chattingUser" label="' + data.msg[i].nickname + '" lang="' + data.msg[i].uid + '"><img style="float:left;height:80px;" src="' +
+								data.msg[i].headImgPath + '"/><p style="width:180px;height:5px;position:relative;top:-15px;">' +
+								data.msg[i].nickname +
+								'</p><span class=badge style=float:right;></span><p>' +
+								data.msg[i].lastUserChat +
+								'</p></menuitem><span id="timeSpan" style="position:relative;top:5px;left:-20px;">' +
+								data.msg[i].lastUserChatTime +
+								'</span></menu>';
 						}
-						$("div .menu-container").html(html);
-	                } else {
-	                	$("div .menu-container").html(data.msg);
-	                }
-	            },
-	            error:function(){
-	            	status = false;
-	            }
-	        });
+						//重排用户列表
+						$("div .menu-container").html(html + '<div class="sliding-bar"></div>');
+						if(data.msg.length > 0){
+							//重新显示用户聊天列表
+							var userAllChatRecords = data.msg[0].userChatRecords;
+							var ulChatHtml = "";
+							for(i = 0; i < userAllChatRecords.length; i++){
+								var className = "toUser";
+								if(data.msg[0].uid == userAllChatRecords[i].toUid){
+									className = "fromUser";
+								}
+								ulChatHtml += "<li class='"+className+"'>"+userAllChatRecords[i].chatRecode+"</li>";
+							}
+							$("ul.chat-thread").html(ulChatHtml);
+							if(userAllChatRecords.length > 0){
+								//修改用户2头像
+								toUserImg = data.msg[0].userChatRecords[0].toUserImgPath;
+								changeHeadImg();
+								$("#sendUserChat").attr("lang",data.msg[0].userChatRecords[0].toUid);
+							}
+						}
+						//修改聊天对话框的用户昵称
+						$("#chatTitle").html(data.msg[0].nickname);
+						$('menuitem').hover(
+								function() {
+									var offset = $(this).offset();
+									$('.sliding-bar').offset(offset);
+								});
+						$('menu').hover(function() {
+							$('.sliding-bar').css({
+								opacity: 1
+							});
+						}, function() {
+							$('.sliding-bar').css({
+								opacity: 0
+							});
+						})
+						initMenu();
+						$('menuitem[name="chattingUser"]').on('click',
+						function(event) {
+							showChatDetails(this);
+						});
+					} else {
+						$("div .menu-container").html(
+							data.msg);
+					}
+				},
+				error: function() {
+					status = false;
+				}
+			});
 		});
-	
-		$(window).ready(function(){
-		  initMenu();
+
+		$(window).ready(function() {
+			initMenu();
 		});
-	
-		$('menuitem').hover(function(){
-		  var offset = $(this).offset();
-		  $('.sliding-bar').offset(offset);
+
+		$('menuitem').hover(function() {
+			var offset = $(this).offset();
+			$('.sliding-bar').offset(offset);
 		});
-	
-		$('menu').hover(function(){
-		  $('.sliding-bar').css({opacity:1});
-		},function(){
-		  $('.sliding-bar').css({opacity:0});
+
+		$('menu').hover(function() {
+			$('.sliding-bar').css({
+				opacity : 1
+			});
+		}, function() {
+			$('.sliding-bar').css({
+				opacity : 0
+			});
 		})
-	
-	
-		var initMenu = function () {
-		  var $initElem = $('menuitem:first-of-type');
-		  var initOffset = $initElem.offset();
-		  var initSize = {
-			width: $initElem.css('width'),
-			height: $initElem.css('height')    
-		  }
-		  $('.sliding-bar')
-			.offset(initOffset)
-			.css(initSize)
+
+		var initMenu = function() {
+			var elementHight = parseInt($('menuitem:first-of-type').css(
+					'height'));
+			var timeSpanHight = parseInt($("#timeSpan").css('height'));
+			elementHight += timeSpanHight;
+			var $initElem = $('menuitem:first-of-type');
+			var initOffset = $initElem.offset();
+			var initSize = {
+				width : $initElem.css('width'),
+				height : elementHight
+			}
+			$('.sliding-bar').offset(initOffset).css(initSize)
 		}
 	</script>
 </body>

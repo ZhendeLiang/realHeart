@@ -1,11 +1,14 @@
 package com.liangzd.realHeart.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * 
@@ -26,6 +29,9 @@ public class TbUserRelation implements Serializable{
 	private String firstUserRelation;//用户1对用户2的关系 0为喜欢,1为不喜欢,2为未处理
 	@Column(length=2)
 	private String secondUserRelation;//用户2对用户1的关系
+	@Column(columnDefinition="timestamp")
+	@JSONField(format="yyyy-MM-dd")
+	private Timestamp createTime;//创建日期,格式化JSON数据日期类型
 	public Integer getId() {
 		return id;
 	}
@@ -55,5 +61,17 @@ public class TbUserRelation implements Serializable{
 	}
 	public void setSecondUserRelation(String secondUserRelation) {
 		this.secondUserRelation = secondUserRelation;
+	}
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+	@Override
+	public String toString() {
+		return "TbUserRelation [id=" + id + ", firstUid=" + firstUid + ", secondUid=" + secondUid
+				+ ", firstUserRelation=" + firstUserRelation + ", secondUserRelation=" + secondUserRelation
+				+ ", createTime=" + createTime + "]";
 	}
 }

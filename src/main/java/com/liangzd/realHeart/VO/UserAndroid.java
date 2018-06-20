@@ -2,28 +2,30 @@ package com.liangzd.realHeart.VO;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 
+/**
+ * 
+ * @Description: 用户与AndroidClient数据交互的实体类
+ * @author liangzd
+ * @date 2018年6月20日 下午4:04:30
+ */
 public class UserAndroid implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private Integer uid;
-	private String username;
-	private String nickname;
-	private String password;
-	private String gender;
-	private String phoneNumber;
-	private String idCard;
-	private String email;
+	private Integer uid;//用户uid
+	private String username;//用户名
+	private String nickname;//昵称
+	private String password;//密码
+	private String gender;//性别
+	private String phoneNumber;//手机号
+	private String idCard;//身份证
+	private String email;//邮箱
 	private String selfIntroduction;//自我介绍
 	private byte state;//用户状态,0:创建未认证（比如没有激活，没有输入验证码等等）--等待验证的用户 , 1:正常状态,2：用户被锁定.
 	private Date createTime;//创建日期
-	private String viprankName;
-	private String addressId;
-	private String headImgPath;
-	
-	private String userHeadImg;
-	List<String> backgroundImgs;
+	private String viprankName;//用户会员等级名称
+	private String addressId;//用户地址ID
+	private String headImgPath;//用户头像路径
 	
 	public Integer getUid() {
 		return uid;

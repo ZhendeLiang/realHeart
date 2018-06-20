@@ -1,5 +1,11 @@
 package com.liangzd.realHeart.VO;
 
+/**
+ * 
+ * @Description: 用户的前后端数据交互实体类
+ * @author liangzd
+ * @date 2018年6月20日 下午4:24:53
+ */
 public class UserVo {
 	//正常登陆
 	private String userinp;//手机号/用户名/UID/邮箱
@@ -25,16 +31,16 @@ public class UserVo {
 	//二维码验证码与正常登陆验证码相同veri
 
 	//管理员登录
-	private String adminUsername;
-	private String adminPassword;
+	private String adminUsername;//管理员名称
+	private String adminPassword;//管理员密码
 	
-	private Integer verifyTimes;
+	private Integer verifyTimes;//验证时间
 	
-	private String email;
-	private String username;
+	private String email;//邮箱
+	private String username;//用户名
 	
-	private Integer uid;
-	private String verifyUUID;
+	private Integer uid;//用户uid
+	private String verifyUUID;//验证码的UUID值
 	
 	public String getVeri() {
 		return veri;
@@ -170,5 +176,14 @@ public class UserVo {
 
 	public void setVerifyUUID(String verifyUUID) {
 		this.verifyUUID = verifyUUID;
+	}
+
+	@Override
+	public String toString() {
+		return "UserVo [userinp=" + userinp + ", password=" + password + ", veri=" + veri + ", phone=" + phone
+				+ ", veriCode=" + veriCode + ", type=" + type + ", tel=" + tel + ", passport=" + passport
+				+ ", passport2=" + passport2 + ", pcTel=" + pcTel + ", adminUsername=" + adminUsername
+				+ ", adminPassword=" + adminPassword + ", verifyTimes=" + verifyTimes + ", email=" + email
+				+ ", username=" + username + ", uid=" + uid + ", verifyUUID=" + verifyUUID + "]";
 	}
 }

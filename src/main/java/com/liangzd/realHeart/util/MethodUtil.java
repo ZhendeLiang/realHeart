@@ -19,6 +19,12 @@ import com.liangzd.verifyCode.mail.MailVerifyCode;
 import com.liangzd.verifyCode.phone.PhoneConfiguration;
 import com.liangzd.verifyCode.phone.PhoneVerifyCode;
 
+/**
+ * 
+ * @Description: 常用的静态方法
+ * @author liangzd
+ * @date 2018年6月20日 下午3:18:30
+ */
 public class MethodUtil {
 	/**
 	 * 

@@ -67,4 +67,9 @@ public class TbUserImg implements Serializable{
 	public void setIncreasement(Integer increasement) {
 		this.increasement = increasement;
 	}
+	@Override
+	public String toString() {
+		return "TbUserImg [id=" + id + ", uid=" + uid + ", imgUUID=" + imgUUID + ", imgType=" + imgType
+				+ ", createTime=" + createTime + ", increasement=" + increasement + "]";
+	}
 }

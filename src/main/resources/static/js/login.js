@@ -191,7 +191,6 @@ $(function(){
 			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
-			                	;
 			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
 			                    globalTip(data.msg);
 			                } else if(data.code == '2') {

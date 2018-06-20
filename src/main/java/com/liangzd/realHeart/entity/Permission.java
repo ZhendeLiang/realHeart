@@ -29,9 +29,9 @@ public class Permission implements Serializable {
     private String permission; //权限字符串,menu例子：role:*，button例子：role:create,role:update,role:delete,role:view
     private Long parentId; //父编号
     private String parentIds; //父编号列表
-    private Boolean available = Boolean.FALSE;
+    private Boolean available = Boolean.FALSE;//判断是否可用
     @ManyToMany
-    @JoinTable(name="trRolePermission",joinColumns={@JoinColumn(name="permissionId")},inverseJoinColumns={@JoinColumn(name="roleId")})
+    @JoinTable(name="trRolePermission",joinColumns={@JoinColumn(name="permissionId")},inverseJoinColumns={@JoinColumn(name="roleId")})//多对一外键关联
     private List<Role> roles;
 	public Integer getId() {
 		return id;
@@ -86,6 +86,12 @@ public class Permission implements Serializable {
 	}
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	@Override
+	public String toString() {
+		return "Permission [id=" + id + ", name=" + name + ", resourceType=" + resourceType + ", url=" + url
+				+ ", permission=" + permission + ", parentId=" + parentId + ", parentIds=" + parentIds + ", available="
+				+ available + ", roles=" + roles + "]";
 	}
 
  }

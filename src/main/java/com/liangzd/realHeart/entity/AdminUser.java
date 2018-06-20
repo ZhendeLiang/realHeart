@@ -41,4 +41,8 @@ public class AdminUser implements Serializable{
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
 	}
+	@Override
+	public String toString() {
+		return "AdminUser [id=" + id + ", adminUsername=" + adminUsername + ", adminPassword=" + adminPassword + "]";
+	}
 }

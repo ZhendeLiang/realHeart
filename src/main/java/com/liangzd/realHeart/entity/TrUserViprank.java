@@ -66,4 +66,9 @@ public class TrUserViprank implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	@Override
+	public String toString() {
+		return "TrUserViprank [id=" + id + ", userId=" + userId + ", viprankId=" + viprankId + ", openTime=" + openTime
+				+ ", surplusDay=" + surplusDay + "]";
+	}
 }

@@ -4,9 +4,14 @@ import javax.servlet.MultipartConfigElement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
  * 
@@ -37,5 +42,22 @@ public class RealHeartApplication {
         /// 设置总上传数据总大小  
         factory.setMaxRequestSize("100MB");  
         return factory.createMultipartConfig();  
-    } 
+    }
+    
+    /**
+     * 
+     * @Description: 配置Spring Boot 使用fastjson解析JSON数据
+     * @param 
+     * @return HttpMessageConverters
+     * @author liangzd
+     * @date 2018年6月17日 下午4:17:15
+     */
+    @Bean
+    public HttpMessageConverters fastjsonHttpMessageConverter() {
+         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
+         FastJsonConfig fastJsonConfig = new FastJsonConfig();
+         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+         return new HttpMessageConverters(fastJsonHttpMessageConverter);
+    }
 }

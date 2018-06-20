@@ -29,7 +29,7 @@ public class TbUserChatRecord implements Serializable,Comparable<TbUserChatRecor
 	private String chatRecode;//聊天记录
 	private Integer type;//聊天类型 0未读 1已读
 	@Column(columnDefinition="timestamp")
-	@JSONField(format="yyyy-mm-dd hh:mm:ss")
+	@JSONField(format="MM-dd hh:mm")
 	private Timestamp lastChatTime;//最后聊天时间,格式化JSON数据的样式
 	@Transient
 	private String toUserImgPath;//非持久化属性,用户2的头像地址
@@ -92,5 +92,11 @@ public class TbUserChatRecord implements Serializable,Comparable<TbUserChatRecor
 		}else{
 			return -1;
 		}
+	}
+	@Override
+	public String toString() {
+		return "TbUserChatRecord [id=" + id + ", fromUid=" + fromUid + ", toUid=" + toUid + ", chatRecode=" + chatRecode
+				+ ", type=" + type + ", lastChatTime=" + lastChatTime + ", toUserImgPath=" + toUserImgPath
+				+ ", fromUserImgPath=" + fromUserImgPath + "]";
 	}
 }

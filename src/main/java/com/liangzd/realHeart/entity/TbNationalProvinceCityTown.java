@@ -41,4 +41,8 @@ public class TbNationalProvinceCityTown implements Serializable{
 	public void setParentCode(String parentCode) {
 		this.parentCode = parentCode;
 	}
+	@Override
+	public String toString() {
+		return "TbNationalProvinceCityTown [code=" + code + ", name=" + name + ", parentCode=" + parentCode + "]";
+	}
 }

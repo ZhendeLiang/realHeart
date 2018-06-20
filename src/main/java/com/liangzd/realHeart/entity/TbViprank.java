@@ -43,4 +43,8 @@ public class TbViprank implements Serializable{
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	@Override
+	public String toString() {
+		return "TbViprank [id=" + id + ", name=" + name + ", price=" + price + "]";
+	}
 }

@@ -403,7 +403,7 @@ public class AndroidClientAction {
 				succInfo.setJump(true);
 				succInfo.setMsg("验证成功");
 				succInfo.setSetTime(0);
-				succInfo.setURL("resetShow.html?hideEmail=" + hideEmail + "&emailType=" + emailType + "&verifyUUID="
+				succInfo.setUrl("resetShow.html?hideEmail=" + hideEmail + "&emailType=" + emailType + "&verifyUUID="
 						+ verifyUUID);
 				responseJson.setMsg(succInfo);
 				try {
@@ -554,6 +554,7 @@ public class AndroidClientAction {
 				tbUserRelation.setFirstUid(hasUser.getUid());
 				tbUserRelation.setFirstUserRelation(relation);
 				tbUserRelation.setSecondUid(targetUid);
+				tbUserRelation.setCreateTime(new Timestamp(System.currentTimeMillis()));
 				userRelationService.saveUserRelation(tbUserRelation);
 				responseJson.setCode(0);
 				responseJson.setMsg("0".equals(relation) ? 
@@ -600,10 +601,13 @@ public class AndroidClientAction {
 				userChat.setToUid(friends.getUid());
 				TbUserChatRecord lastChatRecord = userChatRecordService.findLatestByFromUidAndToUid(userChat);
 				if(lastChatRecord == null) {
-					friend.setLastUserChat("快点来开始聊天吧。");
-					friend.setLastUserChatTime(new Timestamp(System.currentTimeMillis()));
+					String defaultChat = "快点来开始聊天吧。";
+					friend.setLastUserChat(defaultChat.length()> 5 ? defaultChat.substring(0,5)+"..." : defaultChat);
+					//查找对应用户关系的对象，用于获取成为朋友的时间
+					Optional<TbUserRelation> userRelation = userRelationService.findByUidAndTargetUid(user.getUid(), friends.getUid());
+					friend.setLastUserChatTime(userRelation.isPresent() ? userRelation.get().getCreateTime() : new Timestamp(System.currentTimeMillis()));
 				}else {
-					friend.setLastUserChat(lastChatRecord.getChatRecode());
+					friend.setLastUserChat(lastChatRecord.getChatRecode().length()> 5 ? lastChatRecord.getChatRecode().substring(0,5)+"..." : lastChatRecord.getChatRecode());
 					friend.setLastUserChatTime(lastChatRecord.getLastChatTime());
 				}
 				filterFriendsInfoList.add(friend);

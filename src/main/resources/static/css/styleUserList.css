@@ -22,12 +22,15 @@ body {
 .menu-container {
   display: inline-block;
   position: absolute;
+  overflow:auto;
  /*  top: 20%;
   left: 10%;
-  top:117px;*/
+  top:117px;
   top: 167px;
   left: 120px;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%); */
+  top: 50px;
+  left: 15px;
   background-color: #fff;
   z-index: 0;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);

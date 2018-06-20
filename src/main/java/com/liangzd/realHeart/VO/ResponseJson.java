@@ -1,14 +1,20 @@
 package com.liangzd.realHeart.VO;
 
+/**
+ * 
+ * @Description:  用户向前端返回指定格式的JSON数据
+ * @author liangzd
+ * @date 2018年6月20日 下午3:57:54
+ */
 public class ResponseJson {
-	private Integer code;
-	private Object msg;
-	private Boolean usingVerifyCode;
-	private String pageNum;
-	private String pageSize;
-	private String totalCount;
-	private String currentPageCount;
-	private String token;
+	private Integer code;//返回值,一般0为正确
+	private Object msg;//放回消息,如果需要数据的时候,可将数据放置在这里
+	private Boolean usingVerifyCode;//是否正在使用验证码值
+	private String pageNum;//页数
+	private String pageSize;//页面数据大小
+	private String totalCount;//数据总数
+	private String currentPageCount;//当前页面数
+	private String token;//返回AndroidClient的token值
 
 	public Integer getCode() {
 		return code;

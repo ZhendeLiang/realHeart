@@ -1,7 +1,9 @@
 package com.liangzd.realHeart.action;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +21,13 @@ import com.alibaba.druid.util.StringUtils;
 import com.liangzd.realHeart.VO.UserImgVo;
 import com.liangzd.realHeart.entity.TbAddress;
 import com.liangzd.realHeart.entity.TbNationalProvinceCityTown;
+import com.liangzd.realHeart.entity.TbUserChatRecord;
 import com.liangzd.realHeart.entity.TbUserImg;
+import com.liangzd.realHeart.entity.TbUserRelation;
 import com.liangzd.realHeart.entity.TrUserViprank;
 import com.liangzd.realHeart.entity.User;
 import com.liangzd.realHeart.service.AddressService;
+import com.liangzd.realHeart.service.UserChatRecordService;
 import com.liangzd.realHeart.service.UserImgService;
 import com.liangzd.realHeart.service.UserRelationService;
 import com.liangzd.realHeart.service.UserService;
@@ -49,6 +54,8 @@ public class ForwardingAction {
 	private UserRelationService userRelationService;
 	@Autowired
 	private ViprankService viprankService;
+	@Autowired
+	private UserChatRecordService userChatRecordService;
 	
 	public UserService getUserService() {
 		return userService;
@@ -88,6 +95,14 @@ public class ForwardingAction {
 
 	public void setViprankService(ViprankService viprankService) {
 		this.viprankService = viprankService;
+	}
+	
+	public UserChatRecordService getUserChatRecordService() {
+		return userChatRecordService;
+	}
+
+	public void setUserChatRecordService(UserChatRecordService userChatRecordService) {
+		this.userChatRecordService = userChatRecordService;
 	}
 
 	/**
@@ -205,19 +220,6 @@ public class ForwardingAction {
 	
 	/**
 	 * 
-	 * @Description: 登陆成功-显示当前用户的好友列表与第一个用户的聊天记录
-	 * @param 
-	 * @return String
-	 * @author liangzd
-	 * @date 2018年6月16日 下午8:09:35
-	 */
-	/*@RequestMapping(value = "/friendsAndChat",method = RequestMethod.GET)
-    public String friendsAndChat() {
-		return "friendsAndChat";
-    }*/
-
-	/**
-	 * 
 	 * @Description: 管理员登陆成功,用于跳转到管理的登陆界面
 	 * @param 
 	 * @return String
@@ -312,6 +314,9 @@ public class ForwardingAction {
 				ConstantParams.USER_RELATION_LIKE, ConstantParams.USER_RELATION_LIKE);
 		List<User> friendsList = userService.findAllUsersByUid(uids);
 		List<User> filterFriendsInfoList = new ArrayList<User>();
+		/*Integer lastChatId = 0;*/
+		String lastUserChatIds = "";
+		StringBuffer lastUserChatIdsBuffer = new StringBuffer();
 		for(User friends : friendsList) {
 			User friend = new User();
 			friend.setUid(friends.getUid());
@@ -319,8 +324,53 @@ public class ForwardingAction {
 			List<TbUserImg> friendsHeadImgs = userImgService.findByUidAndImgType(friends.getUid(), ConstantParams.HEADIMG);
 			friend.setHeadImgPath((friendsHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
 				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + friendsHeadImgs.get(0).getImgUUID()));
+			//查找用户朋友列表对应的最后一条聊天记录
+			TbUserChatRecord userChat = new TbUserChatRecord();
+			userChat.setFromUid(user.getUid());
+			userChat.setToUid(friends.getUid());
+			TbUserChatRecord lastChatRecord = userChatRecordService.findLatestByFromUidAndToUid(userChat);
+			if(lastChatRecord == null) {
+				String defaultChat = "快点来开始聊天吧。";
+				friend.setLastUserChat(defaultChat);
+				//查找对应用户关系的对象，用于获取成为朋友的时间
+				Optional<TbUserRelation> userRelation = userRelationService.findByUidAndTargetUid(user.getUid(), friends.getUid());
+				friend.setLastUserChatTime(userRelation.isPresent() ? userRelation.get().getCreateTime() : new Timestamp(System.currentTimeMillis()));
+				lastUserChatIdsBuffer.append(friend.getUid()+":0;");
+			}else {
+				friend.setLastUserChat(lastChatRecord.getChatRecode());
+				friend.setLastUserChatTime(lastChatRecord.getLastChatTime());
+				/*lastChatId = lastChatRecord.getId() > lastChatId ? lastChatRecord.getId() : lastChatId;*/
+				lastUserChatIdsBuffer.append(friend.getUid()+":"+lastChatRecord.getId()+";");
+			}
 			filterFriendsInfoList.add(friend);
 		}
+		//根据时间-用户uid排序
+		Collections.sort(filterFriendsInfoList);
+		String toUserImgPath = "";
+		String fromUserImgPath = "";
+		List<TbUserImg> fromUidHeadImgs = userImgService.findByUidAndImgType(user.getUid(), ConstantParams.HEADIMG);
+		fromUserImgPath = fromUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+			ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + fromUidHeadImgs.get(0).getImgUUID();
+		//获取用户
+		if(filterFriendsInfoList.size() > 0) {
+			Integer toUid = filterFriendsInfoList.get(0).getUid();
+			//获取用户头像
+			List<TbUserImg> toUidHeadImgs = userImgService.findByUidAndImgType(toUid, ConstantParams.HEADIMG);
+			toUserImgPath = toUidHeadImgs.size() == 0 ? "/img/defaultHeadImg.jpg" : 
+				ConstantParams.SERVER_HEADIMG_UPLOAD_PATH + toUidHeadImgs.get(0).getImgUUID();
+			TbUserChatRecord userChat = new TbUserChatRecord();
+			userChat.setFromUid(user.getUid());
+			userChat.setToUid(toUid);
+			List<TbUserChatRecord> allChatRecords = userChatRecordService.findAllByFromUidAndToUid(userChat);
+			model.addAttribute("currentFriendsChatAllChatRecords", allChatRecords);
+			model.addAttribute("currentUserUid", user.getUid());
+		}
+		lastUserChatIds = lastUserChatIdsBuffer.indexOf(";") != -1 ? 
+				lastUserChatIdsBuffer.substring(0, lastUserChatIdsBuffer.length()-1).toString() : lastUserChatIdsBuffer.toString();
+		model.addAttribute("chatFlushTime", ConstantParams.CHATFLUSHTIME);
+		model.addAttribute("lastChatIds", lastUserChatIds);
+		model.addAttribute("toUserImgPath", toUserImgPath);
+		model.addAttribute("fromUserImgPath", fromUserImgPath);
 		model.addAttribute("friendsList", filterFriendsInfoList);
         return "userFriendsList";
     }

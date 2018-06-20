@@ -68,7 +68,7 @@ public class LoginAction {
 		Subject currentUser = SecurityUtils.getSubject();
 		responseJson = new ResponseJson();
 		CustomizedToken token = null;
-		if (!currentUser.isAuthenticated()) {
+		/*if (!currentUser.isAuthenticated()) {*/
 			// 判断是普通用户还是管理员,对应调用不同的realm进行验证
 			token = !isAdmin ? new CustomizedToken(user.getUserinp(), user.getPassword(), LoginType.USER.toString())
 					: new CustomizedToken(user.getAdminUsername(), user.getAdminPassword(), LoginType.ADMIN.toString());
@@ -112,15 +112,15 @@ public class LoginAction {
 				responseJson.setMsg("验证码错误");
 				return responseJson;
 			}
-		} else {
+		/*} else {
 			responseJson.setCode(0);
-		}
+		}*/
 		if (responseJson.getCode() == 0) {
 			SuccJson succInfo = new SuccJson();
 			succInfo.setJump(true);
 			succInfo.setMsg(token == null ? (String) currentUser.getPrincipal() : token.getPrincipal() + "欢迎您");
 			succInfo.setSetTime(0);
-			succInfo.setURL(isAdmin ? "/filter/adminWelcome" : "/filter/welcome");
+			succInfo.setUrl(isAdmin ? "/filter/adminWelcome" : "/filter/welcome");
 			responseJson.setMsg(succInfo);
 		}
 		// 此方法不处理登录成功,由shiro进行处理
@@ -156,7 +156,7 @@ public class LoginAction {
 					succInfo.setJump(true);
 					succInfo.setMsg(token == null ? (String) currentUser.getPrincipal() : token.getPrincipal() + "欢迎您");
 					succInfo.setSetTime(0);
-					succInfo.setURL("/filter/welcome");
+					succInfo.setUrl("/filter/welcome");
 					responseJson.setMsg(succInfo);
 				}catch(Exception e) {
 					e.printStackTrace();
@@ -371,7 +371,7 @@ public class LoginAction {
 				succInfo.setJump(true);
 				succInfo.setMsg(phone+"欢迎您");
 				succInfo.setSetTime(0);
-				succInfo.setURL("/filter/welcome");
+				succInfo.setUrl("/filter/welcome");
 				responseJson.setMsg(succInfo);
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -407,8 +407,6 @@ public class LoginAction {
 					((String) request.getSession().getAttribute(phone)).equals(veriCode)) {
 				Optional<User> hasUser = userService.findByPhoneNumber(user.getPhone());
 				if(hasUser.isPresent()) {
-//					request.getSession().setAttribute(hasUser.get().getUid().toString(), "resPassword");
-//					request.getSession().setAttribute(hasUser.get().getUid().toString()+"Flag", "true");
 					String uid = hasUser.get().getUid().toString();
 					String verifyUUID = UUID.randomUUID().toString();
 					request.getSession().setAttribute("uid"+verifyUUID, uid);
@@ -419,8 +417,7 @@ public class LoginAction {
 					succInfo.setJump(true);
 					succInfo.setMsg("验证成功");
 					succInfo.setSetTime(0);
-//					succInfo.setURL("/resetpass.html?uid="+hasUser.get().getUid());
-					succInfo.setURL("/resetpass.html?verifyUUID="+verifyUUID);
+					succInfo.setUrl("/resetpass.html?verifyUUID="+verifyUUID);
 					responseJson.setMsg(succInfo);
 				}else {
 					responseJson.setCode(1);
@@ -462,7 +459,7 @@ public class LoginAction {
 					succInfo.setJump(true);
 					succInfo.setMsg("验证成功");
 					succInfo.setSetTime(0);
-					succInfo.setURL("resetShow.html?hideEmail="+hideEmail+"&emailType="+emailType+"&verifyUUID="+verifyUUID);
+					succInfo.setUrl("resetShow.html?hideEmail="+hideEmail+"&emailType="+emailType+"&verifyUUID="+verifyUUID);
 					responseJson.setMsg(succInfo);
 					try {
 						MethodUtil.sendEmailVerifyURL(emailVo);
@@ -527,7 +524,7 @@ public class LoginAction {
 					succInfo.setJump(true);
 					succInfo.setMsg("修改密码成功");
 					succInfo.setSetTime(0);
-					succInfo.setURL("/login.html");
+					succInfo.setUrl("/login.html");
 					responseJson.setMsg(succInfo);
 				}
 			}else {
